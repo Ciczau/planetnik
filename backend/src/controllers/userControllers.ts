@@ -33,10 +33,10 @@ router.post("/refresh", (req: Request, res: Response) => {
 
 router.post("/register", async (req: Request, res: Response) => {
   const { name, email, password } = req.body;
-  const { error } = validateUserRegister(req.body);
-  if (error) {
-    return res.json({ success: false, message: error.details });
-  }
+  //   const { error } = validateUserRegister(req.body);
+  //   if (error) {
+  //     return res.json({ success: false, message: error.details });
+  //   }
   try {
     const isMailFinded = await User.findOne({ email: email }).exec();
     if (isMailFinded)
@@ -70,11 +70,11 @@ router.post("/register", async (req: Request, res: Response) => {
 
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
-  const { error } = validateUserLogin(req.body);
+  //   const { error } = validateUserLogin(req.body);
 
-  if (error) {
-    return res.json({ success: false, message: error.details });
-  }
+  //   if (error) {
+  //     return res.json({ success: false, message: error.details });
+  //   }
 
   const existingUser = await User.findOne({ email: email }).exec();
   if (!existingUser) {

@@ -1,6 +1,16 @@
+import { useRouter } from "next/router";
 import * as S from "./Navigation.styled";
+import { useUserContext } from "@/app/context/user";
+import { useCookies } from "react-cookie";
 
 const Navigation = () => {
+  const [cookie, setCookie, removeCookie] = useCookies(["refreshToken"]);
+  const router = useRouter();
+  const user = useUserContext();
+
+  const handleLogout = () => {
+    removeCookie("refreshToken");
+  };
   return (
     <S.Wrapper>
       <S.Menu>
@@ -9,7 +19,14 @@ const Navigation = () => {
         <S.WindIcon />
       </S.Menu>
       <S.Menu>
-        <S.SignInIcon />
+        {user?._id ? (
+          <>
+            <S.SettingsIcon />
+            <S.SingOutIcon onClick={handleLogout} />
+          </>
+        ) : (
+          <S.SignInIcon onClick={() => router.push("/register")} />
+        )}
       </S.Menu>
     </S.Wrapper>
   );
