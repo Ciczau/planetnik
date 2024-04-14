@@ -28,3 +28,10 @@ export const SearchInput = styled.input`
   box-shadow: 1px 3px 5px rgba(0, 0, 0, 0.25);
   width: 500px;
 `;
+export const Warning = styled.div`
+  width: 100%;
+  font-size: 40px;
+  text-align: center;
+  color: red;
+  margin-top: 200px;
+`;

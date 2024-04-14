@@ -1,3 +1,4 @@
+import { LocationProvider } from "@/app/context/location";
 import { UserProvider } from "@/app/context/user";
 import GlobalStyles from "@/app/utils/globalStyles";
 import { AppProps } from "next/app";
@@ -11,8 +12,10 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <div className={font.className}>
       <UserProvider>
-        <GlobalStyles />
-        <Component {...pageProps} key={router.asPath} />
+        <LocationProvider>
+          <GlobalStyles />
+          <Component {...pageProps} key={router.asPath} />
+        </LocationProvider>
       </UserProvider>
     </div>
   );
