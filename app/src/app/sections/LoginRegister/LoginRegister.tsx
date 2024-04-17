@@ -4,6 +4,8 @@ import Button from "@/app/components/Button/Button";
 import { useRouter } from "next/router";
 import { loginUserRequest, registerUserRequest } from "@/app/api/userRequests";
 import { useCookies } from "react-cookie";
+import Input from "@/app/components/Input/Input";
+import Typography from "@/app/components/Typography/Typography";
 
 type Props = {
   type: "login" | "register";
@@ -34,13 +36,27 @@ const LoginRegister = ({ type }: Props) => {
       <S.LeftContainer />
       <S.RightContainer>
         <S.Form onSubmit={handleSubmit(onSubmit)}>
-          <S.Title>{type === "register" ? "Sign up" : "Sign in"}</S.Title>
-          <S.Input {...register("email")} placeholder="Email" />
+          <Typography tag="h1">
+            {type === "register" ? "Sign up" : "Sign in"}
+          </Typography>
+          <Input
+            {...register("email")}
+            placeholder="Email"
+            border={true}
+            width={300}
+          />
           {type === "register" && (
-            <S.Input {...register("name")} placeholder="Name" />
+            <Input
+              {...register("name")}
+              placeholder="Name"
+              border={true}
+              width={300}
+            />
           )}
-          <S.Input
+          <Input
             {...register("password")}
+            border={true}
+            width={300}
             placeholder="Password"
             type="password"
           />
@@ -57,7 +73,9 @@ const LoginRegister = ({ type }: Props) => {
               </>
             )}
           </S.Information>
-          <Button>{type === "register" ? "Sign up" : "Sign in"}</Button>
+          <Button version="secondary">
+            {type === "register" ? "Sign up" : "Sign in"}
+          </Button>
         </S.Form>
       </S.RightContainer>
     </S.Wrapper>

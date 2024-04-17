@@ -21,24 +21,13 @@ export const Form = styled.form`
   width: 100%;
   height: 100%;
   display: flex;
+  gap: 20px;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 `;
 
-export const Title = styled.h1`
-  font-size: 2rem;
-  margin-bottom: 50px;
-`;
-
-export const Input = styled.input`
-  padding: 10px;
-  margin: 10px 0;
-  width: 300px;
-`;
-
 export const Information = styled.p`
-  margin: 20px 0;
   b {
     cursor: pointer;
   }

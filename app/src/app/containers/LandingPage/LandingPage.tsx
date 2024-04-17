@@ -1,6 +1,8 @@
 import Navigation from "@/app/components/Navigation/Navigation";
 import * as S from "./LandingPage.styled";
 import { useLocationContext } from "@/app/context/location";
+import Input from "@/app/components/Input/Input";
+import { Typography } from "@/app/components/Typography/Typography.styled";
 
 const LandingPage = () => {
   const location = useLocationContext();
@@ -10,10 +12,12 @@ const LandingPage = () => {
       <S.Content>
         <S.ContentHeader>
           <div>
-            <S.Title>Hello</S.Title>
-            <S.Subtitle>Check today&apos;s weather forecast</S.Subtitle>
+            <Typography tag="h1">Hello</Typography>
+            <Typography tag="h2">
+              Check today&apos;s weather forecast
+            </Typography>
           </div>
-          <S.SearchInput placeholder="Search for a city" />
+          <Input placeholder="Search for a city" width={500} />
           <div />
         </S.ContentHeader>
         <S.Warning>{location?.error}</S.Warning>
