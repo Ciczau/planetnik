@@ -14,7 +14,7 @@ const Navigation = () => {
   return (
     <S.Wrapper>
       <S.Menu>
-        <S.GlobeIcon />
+        <S.GlobeIcon onClick={() => router.push("/")} />
         <S.CloudSunRainIcon />
         <S.WindIcon />
       </S.Menu>

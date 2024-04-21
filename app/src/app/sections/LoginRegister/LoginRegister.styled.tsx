@@ -32,3 +32,9 @@ export const Information = styled.p`
     cursor: pointer;
   }
 `;
+export const Input = styled.input`
+  padding: 15px;
+  border: none;
+  width: 400px;
+  border: 1px solid black;
+`;

@@ -3,4 +3,5 @@ export type TLocation = {
   error?: string;
   latitude?: number;
   longitude?: number;
+  activities?: string[];
 };

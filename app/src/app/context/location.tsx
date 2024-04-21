@@ -5,6 +5,7 @@ import { useCookies } from "react-cookie";
 import { TUser } from "../types/user";
 import { tokenRequest } from "../api/userRequests";
 import { TLocation } from "../types/location";
+import { getActivitiesForCoordinates } from "../api/weatherRequests";
 
 export const LocationContext = React.createContext<TLocation | null>(null);
 
@@ -27,9 +28,15 @@ export const LocationProvider = ({ children }: Props) => {
     }
 
     navigator.geolocation.getCurrentPosition(
-      (position) => {
+      async (position) => {
         const { latitude, longitude } = position.coords;
-        setLocation({ latitude, longitude, loaded: true });
+        const res = await getActivitiesForCoordinates(latitude, longitude);
+        setLocation({
+          latitude,
+          longitude,
+          loaded: true,
+          activities: res.activities || [],
+        });
       },
       (error) => {
         setLocation({ error: "Allow location to use this app!", loaded: true });

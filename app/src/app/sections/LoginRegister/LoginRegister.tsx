@@ -18,12 +18,10 @@ const LoginRegister = ({ type }: Props) => {
 
   const router = useRouter();
   const onSubmit = async (data: Object) => {
-    console.log("test");
     const res =
       type === "register"
         ? await registerUserRequest(data)
         : await loginUserRequest(data);
-    console.log(res);
     if (res.success) {
       if (type === "login") {
         setCookie("refreshToken", res.token, { path: "/" });
@@ -39,23 +37,12 @@ const LoginRegister = ({ type }: Props) => {
           <Typography tag="h1">
             {type === "register" ? "Sign up" : "Sign in"}
           </Typography>
-          <Input
-            {...register("email")}
-            placeholder="Email"
-            border={true}
-            width={300}
-          />
+          <S.Input {...register("email")} placeholder="Email" width={300} />
           {type === "register" && (
-            <Input
-              {...register("name")}
-              placeholder="Name"
-              border={true}
-              width={300}
-            />
+            <S.Input {...register("name")} placeholder="Name" width={300} />
           )}
-          <Input
+          <S.Input
             {...register("password")}
-            border={true}
             width={300}
             placeholder="Password"
             type="password"

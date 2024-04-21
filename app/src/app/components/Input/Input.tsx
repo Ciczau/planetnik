@@ -1,3 +1,4 @@
+import { UseFormRegister, RegisterOptions, FieldValues } from "react-hook-form";
 import * as S from "./Input.styled";
 
 type Props = {
@@ -6,6 +7,10 @@ type Props = {
   placeholder: string;
   width?: number;
   type?: string;
+  onKeyUp?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  value?: string;
+  ref?: any;
 };
 
 const Input = ({
@@ -14,6 +19,10 @@ const Input = ({
   width,
   type,
   border,
+  onKeyUp,
+  value,
+  ref,
+  onChange,
 }: Props) => {
   return (
     <S.Input
@@ -22,6 +31,10 @@ const Input = ({
       border={border}
       version={version}
       width={width}
+      onKeyUp={onKeyUp}
+      defaultValue={value}
+      ref={ref}
+      onChange={onChange}
     />
   );
 };
