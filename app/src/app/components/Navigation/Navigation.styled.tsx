@@ -5,6 +5,7 @@ import {
   FaSignOutAlt,
   FaWind,
 } from "react-icons/fa";
+import { MdOutlineSportsVolleyball } from "react-icons/md";
 import { FaGear } from "react-icons/fa6";
 import styled from "styled-components";
 
@@ -19,7 +20,7 @@ export const Wrapper = styled.div`
 
 export const Menu = styled.div`
   display: flex;
-  gap: 28px;
+  gap: 5px;
   padding: 20px 0;
   margin-top: 100px;
   flex-direction: column;
@@ -28,41 +29,77 @@ export const Menu = styled.div`
 
 export const GlobeIcon = styled(FaGlobe)`
   color: white;
-  height: 28px;
-  width: 28px;
+  height: 48px;
+  width: 48px;
   cursor: pointer;
+  border-radius: 50%;
+  padding: 10px;
+  transition: 0.3s ease;
+  &:hover {
+    background-color: #8080806e;
+  }
 `;
 
 export const CloudSunRainIcon = styled(FaCloudSunRain)`
   color: white;
-  height: 28px;
-  width: 28px;
+  height: 48px;
+  width: 48px;
   cursor: pointer;
+  border-radius: 50%;
+  padding: 10px;
+  transition: 0.3s ease;
+  &:hover {
+    background-color: #8080806e;
+  }
 `;
 
-export const WindIcon = styled(FaWind)`
+export const RecommendedIcon = styled(MdOutlineSportsVolleyball)`
   color: white;
-  height: 28px;
-  width: 28px;
+  height: 48px;
+  width: 48px;
   cursor: pointer;
+  border-radius: 50%;
+  padding: 10px;
+  transition: 0.3s ease;
+  &:hover {
+    background-color: #8080806e;
+  }
 `;
 
 export const SignInIcon = styled(FaSignInAlt)`
   color: white;
-  height: 28px;
-  width: 28px;
+  height: 48px;
+  width: 48px;
   cursor: pointer;
+  border-radius: 50%;
+  padding: 10px;
+  transition: 0.3s ease;
+  &:hover {
+    background-color: #8080806e;
+  }
 `;
 export const SingOutIcon = styled(FaSignOutAlt)`
   color: white;
-  height: 28px;
-  width: 28px;
+  height: 48px;
+  width: 48px;
   cursor: pointer;
+  border-radius: 50%;
+  padding: 10px;
+  transition: 0.3s ease;
+  &:hover {
+    background-color: #8080806e;
+  }
 `;
 
 export const SettingsIcon = styled(FaGear)`
   color: white;
-  height: 28px;
-  width: 28px;
+  height: 48px;
+  width: 48px;
   cursor: pointer;
+  border-radius: 50%;
+  padding: 10px;
+  transition: 0.3s ease;
+  &:hover {
+    background-color: #8080806e;
+  }
 `;

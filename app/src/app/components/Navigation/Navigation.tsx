@@ -15,13 +15,13 @@ const Navigation = () => {
     <S.Wrapper>
       <S.Menu>
         <S.GlobeIcon onClick={() => router.push("/")} />
-        <S.CloudSunRainIcon />
-        <S.WindIcon />
+        <S.CloudSunRainIcon onClick={() => router.push("/forecast")} />
+        <S.RecommendedIcon onClick={() => router.push("/recommended")} />
       </S.Menu>
       <S.Menu>
         {user?._id ? (
           <>
-            <S.SettingsIcon />
+            <S.SettingsIcon onClick={() => router.push("/profile")} />
             <S.SingOutIcon onClick={handleLogout} />
           </>
         ) : (
