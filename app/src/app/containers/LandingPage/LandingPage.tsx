@@ -4,10 +4,19 @@ import { useLocationContext } from "@/app/context/location";
 import Input from "@/app/components/Input/Input";
 import { Typography } from "@/app/components/Typography/Typography.styled";
 import { useRouter } from "next/router";
+import Button from "@/app/components/Button/Button";
+import { IDailyWeather } from "@/app/types/weather";
+import { PureComponent, useEffect, useState } from "react";
+import { getWeatherForNextWeek } from "@/app/api/weatherRequests";
+import { Line, LineChart } from "recharts";
 
 const LandingPage = () => {
   const location = useLocationContext();
   const router = useRouter();
+  const [weather, setWeather] = useState<IDailyWeather[]>([]);
+  const [chartData, setChartData] = useState<{ name: string; uv: number }[]>(
+    []
+  );
 
   const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
@@ -15,45 +24,139 @@ const LandingPage = () => {
     }
   };
 
+  useEffect(() => {
+    const getDataForCharts = () => {
+      const dayData = weather.map((day) => ({
+        name: new Date(day.dt * 1000).toLocaleDateString().slice(0, -5),
+        uv: day.temp.day,
+      }));
+      setChartData(dayData);
+    };
+    if (weather) {
+      getDataForCharts();
+    }
+    console.log(weather);
+  }, [weather]);
+
+  useEffect(() => {
+    const getWeatherForecast = async () => {
+      if (location?.latitude && location.longitude) {
+        const res = await getWeatherForNextWeek(
+          location.latitude,
+          location.longitude
+        );
+        setWeather(res.weatherData);
+      }
+    };
+    getWeatherForecast();
+  }, [location]);
+
   const renderActivities = () => {
     if (location?.activities?.length) {
       return location.activities.map((activity: string) => {
         return (
-          <Typography tag="h4" key={activity}>
-            {activity}
-          </Typography>
+          <S.Activity key={activity}>
+            <Typography tag="h4">{activity}</Typography>
+          </S.Activity>
         );
       });
     } else {
-      return <Typography tag="h4">Brak aktywności w Twoim regionie</Typography>;
+      return (
+        <Typography tag="h4">
+          Brak rekomendowanych aktywności w tej lokalizacji
+        </Typography>
+      );
     }
   };
+  class CustomizedLabel extends PureComponent {
+    render() {
+      const { x, y, stroke, value } = this.props as any;
+
+      return (
+        <text
+          x={x}
+          y={y}
+          dy={25}
+          fill={stroke}
+          fontSize={14}
+          textAnchor="middle"
+        >
+          {value}°C
+        </text>
+      );
+    }
+  }
+
   return (
     <S.Wrapper>
       <Navigation />
       <S.Container>
         <S.Header>
           <div>
-            <Typography tag="h1">Hello</Typography>
-            <Typography tag="h2">
-              Check today&apos;s weather forecast
+            <Typography tag="h1">Witaj!</Typography>
+            <Typography tag="h3">
+              Sprawdź dzisiejsze warunki pogodowe w swoim regionie
             </Typography>
           </div>
-          <Input
-            placeholder="Search for a city"
-            width={500}
-            onKeyUp={handleSearch}
-          />
+          <S.InputWrapper>
+            <Input
+              placeholder="Wyszukaj lokalizację"
+              width={500}
+              onKeyUp={handleSearch}
+            />
+            <S.SearchIcon />
+          </S.InputWrapper>
           <div />
         </S.Header>
         {location?.error && <S.Warning>{location.error}</S.Warning>}
         <S.Content>
-          <S.Calendar>Kalendarz pogodowy</S.Calendar>
+          <S.Calendar>
+            <Typography tag="h3">Kalendarz pogodowy</Typography>
+            <S.IconsWrapper>
+              {weather.map((day, index) => {
+                if (day.weather[0].main === "Rain") {
+                  return <S.RainIcon key={index} />;
+                } else if (day.weather[0].main === "Clouds") {
+                  return <S.CloudIcon key={index} />;
+                } else {
+                  return <S.SunIcon key={index} />;
+                }
+              })}
+            </S.IconsWrapper>
+            <LineChart
+              data={chartData}
+              width={510}
+              height={150}
+              margin={{ left: 30, right: 30 }}
+            >
+              <Line
+                type="monotone"
+                dataKey="uv"
+                stroke="#fce309"
+                isAnimationActive={false}
+                strokeWidth={2}
+                label={<CustomizedLabel />}
+              />
+            </LineChart>
+            <S.ChartLegend>
+              {weather.map((day, index) => {
+                return (
+                  <div key={index}>
+                    {new Date(day.dt * 1000).toLocaleDateString().slice(0, -5)}
+                  </div>
+                );
+              })}
+            </S.ChartLegend>
+          </S.Calendar>
           <S.WeatherAlerts>Alerty pogodowe</S.WeatherAlerts>
           <S.RecommendedActivities>
             <Typography tag="h3">Polecane aktywności</Typography>
             {renderActivities()}
+            <Button onClick={() => router.push(`/search/Zduńska Wola`)}>
+              Zobacz więcej
+            </Button>
           </S.RecommendedActivities>
+          <S.Glob>3d globus</S.Glob>
         </S.Content>
       </S.Container>
     </S.Wrapper>
