@@ -23,3 +23,12 @@ export const getActivitiesForCoordinates = async (lat: number, lng: number) => {
     console.error(error);
   }
 };
+
+export const getWeatherForNextWeek = async (lat: number, lng: number) => {
+  try {
+    const res = await instance.get(`/api/weather/forecast/${lat}/${lng}`);
+    return res.data;
+  } catch (err) {
+    console.error(err);
+  }
+};
