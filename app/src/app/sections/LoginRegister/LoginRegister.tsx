@@ -35,33 +35,33 @@ const LoginRegister = ({ type }: Props) => {
       <S.RightContainer>
         <S.Form onSubmit={handleSubmit(onSubmit)}>
           <Typography tag="h1">
-            {type === "register" ? "Sign up" : "Sign in"}
+            {type === "register" ? "Rejestracja" : "Logowanie"}
           </Typography>
           <S.Input {...register("email")} placeholder="Email" width={300} />
           {type === "register" && (
-            <S.Input {...register("name")} placeholder="Name" width={300} />
+            <S.Input {...register("name")} placeholder="Imię" width={300} />
           )}
           <S.Input
             {...register("password")}
             width={300}
-            placeholder="Password"
+            placeholder="Hasło"
             type="password"
           />
           <S.Information>
             {type === "register" ? (
               <>
-                Already have an account?{" "}
-                <b onClick={() => router.push("/login")}>Sign in!</b>
+                Masz już konto?{" "}
+                <b onClick={() => router.push("/login")}>Zaloguj się!</b>
               </>
             ) : (
               <>
-                Don&apos;t have an account?{" "}
-                <b onClick={() => router.push("/register")}>Sign up!</b>
+                Nie posiadasz jeszcze konta?{" "}
+                <b onClick={() => router.push("/register")}>Zarejestruj się!</b>
               </>
             )}
           </S.Information>
           <Button version="secondary">
-            {type === "register" ? "Sign up" : "Sign in"}
+            {type === "register" ? "Zarejestruj się" : "Zaloguj się"}
           </Button>
         </S.Form>
       </S.RightContainer>
