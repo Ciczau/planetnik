@@ -57,6 +57,15 @@ const SearchPage = ({ activitiesByCity }: Props) => {
           <div />
         </S.Header>
         <S.Content>{renderActivities()}</S.Content>
+        <S.PaginationContainer>
+          <S.PageButton>
+            <S.PrevButton />
+          </S.PageButton>
+          <S.PageButton active>1</S.PageButton>
+          <S.PageButton>
+            <S.NextButton />
+          </S.PageButton>
+        </S.PaginationContainer>
       </S.Container>
     </S.Wrapper>
   );
