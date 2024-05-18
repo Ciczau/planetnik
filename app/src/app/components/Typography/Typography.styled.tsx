@@ -17,6 +17,8 @@ export const Typography = styled.div.attrs<{ tag: any }>((props) => ({
         return "12px";
       case "h6":
         return "9px";
+      case "p":
+        return "14px";
       default:
         return "1em";
     }
