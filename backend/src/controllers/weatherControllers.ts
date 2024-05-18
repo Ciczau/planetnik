@@ -116,6 +116,33 @@ router.get("/search/:location", async (req: Request, res: Response) => {
   }
 });
 
+router.get("/forecast/:lat/:lon", async (req: Request, res: Response) => {
+  const { lat, lon } = req.params;
+
+  try {
+    const weatherResponse = await axios.get(
+      "https://api.openweathermap.org/data/3.0/onecall",
+      {
+        params: {
+          lat,
+          lon,
+          appid: "8fcb7e25d8a1a96fe5e721fd3f69f0af",
+          units: "metric",
+        },
+      }
+    );
+
+    const weatherData = weatherResponse.data.daily.slice(0, 7);
+    res.json({ success: true, weatherData });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      error: "Error fetching weather data",
+    });
+  }
+});
+
 router.get("/search/:lat/:lng", async (req: Request, res: Response) => {
   const { lat, lng } = req.params;
 
