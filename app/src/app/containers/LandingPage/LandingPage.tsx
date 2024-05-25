@@ -1,3 +1,4 @@
+"use client";
 import Navigation from "@/app/components/Navigation/Navigation";
 import * as S from "./LandingPage.styled";
 import { useLocationContext } from "@/app/context/location";
@@ -9,6 +10,12 @@ import { IDailyWeather } from "@/app/types/weather";
 import { PureComponent, useEffect, useState } from "react";
 import { getWeatherForNextWeek } from "@/app/api/weatherRequests";
 import { Line, LineChart } from "recharts";
+import dynamic from "next/dynamic";
+import { Canvas } from "@react-three/fiber";
+
+const Globe = dynamic(() => import("@/app/components/Globe/Globe"), {
+  ssr: false,
+});
 
 const LandingPage = () => {
   const location = useLocationContext();
@@ -156,7 +163,11 @@ const LandingPage = () => {
               Zobacz więcej
             </Button>
           </S.RecommendedActivities>
-          <S.Glob>3d globus</S.Glob>
+          <S.Glob>
+            <Canvas>
+              <Globe />
+            </Canvas>
+          </S.Glob>
         </S.Content>
       </S.Container>
     </S.Wrapper>

@@ -77,6 +77,7 @@ export const RecommendedActivities = styled.div`
 
 export const Glob = styled(WeatherAlerts)`
   height: 400px;
+  cursor: pointer;
 `;
 export const Activity = styled.div`
   border-bottom: 1px solid #dddddd;
