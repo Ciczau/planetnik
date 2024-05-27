@@ -12,6 +12,7 @@ import { getWeatherForNextWeek } from "@/app/api/weatherRequests";
 import { Line, LineChart } from "recharts";
 import dynamic from "next/dynamic";
 import { Canvas } from "@react-three/fiber";
+import { TActivity } from "@/app/types/location";
 
 const Globe = dynamic(() => import("@/app/components/Globe/Globe"), {
   ssr: false,
@@ -60,10 +61,12 @@ const LandingPage = () => {
 
   const renderActivities = () => {
     if (location?.activities?.length) {
-      return location.activities.map((activity: string) => {
+      return location.activities.map((activity: TActivity) => {
         return (
-          <S.Activity key={activity}>
-            <Typography tag="h4">{activity}</Typography>
+          <S.Activity
+            key={`landing-page-${activity.activity}-${activity.date}`}
+          >
+            <Typography tag="h4">{activity.activity}</Typography>
           </S.Activity>
         );
       });

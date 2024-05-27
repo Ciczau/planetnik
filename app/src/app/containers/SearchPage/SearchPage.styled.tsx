@@ -18,6 +18,9 @@ export const Header = styled.div`
 
 export const Content = styled.div`
   margin-top: 40px;
+  display: flex;
+
+  gap: 20px;
 `;
 
 export const Activity = styled.div`
@@ -74,4 +77,32 @@ export const PrevButton = styled(IoIosArrowBack)`
 export const NextButton = styled(IoIosArrowForward)`
   height: 20px;
   width: 20px;
+`;
+export const Activities = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: calc(100% - 300px);
+  gap: 20px;
+`;
+
+export const Filters = styled.div`
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  gap: 20px;
+  background-color: #e4e4e444;
+  border-radius: 7px;
+  width: 360px;
+  padding: 20px;
+`;
+
+export const FilterCategory = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-bottom: 25px;
+
+  &:not(:last-child) {
+    border-bottom: 1px solid #b6b6b6;
+  }
 `;

@@ -7,12 +7,12 @@ const pins = [
   { lat: 51.5074, lng: -0.1278, label: "London" },
   { lat: 52.5074, lng: 10.1278, label: "London" },
 ];
+const radius = 2.5;
 
 const Globe: React.FC = () => {
   const texture = useTexture("/globe.jpg");
   const globeRef = useRef<THREE.Mesh>(null);
   const [hoveredPin, setHoveredPin] = useState<string | null>(null);
-  const [radius, setRadius] = useState<number>(1); // Initial radius of the globe
 
   const handlePointerOver = (event: any) => {
     setHoveredPin(event.object.userData.label);

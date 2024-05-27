@@ -3,13 +3,17 @@ import * as S from "./SearchPage.styled";
 import Typography from "@/app/components/Typography/Typography";
 import Input from "@/app/components/Input/Input";
 import { useRouter } from "next/router";
+import { IActivity } from "@/app/types/activity";
+import Activity from "@/app/components/Activity/Activity";
+import Checkbox from "@/app/components/Checkbox/Checkbox";
 
 type Props = {
-  activitiesByCity: any;
+  activitiesByCity: IActivity[];
 };
 
 const SearchPage = ({ activitiesByCity }: Props) => {
   const router = useRouter();
+  console.log(activitiesByCity);
   const location_id = router.query.location_id as string;
 
   const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -22,18 +26,12 @@ const SearchPage = ({ activitiesByCity }: Props) => {
     if (activitiesByCity.length === 0) {
       return <Typography tag="h2">Brak aktywności w danym miejscu.</Typography>;
     } else {
-      return activitiesByCity.map((activityByCity: any) => {
+      return activitiesByCity.map((activityByCity: IActivity) => {
         return (
-          <S.Activity key={`search-page-${activityByCity.city}`}>
-            <Typography tag="h4">{activityByCity.city}</Typography>
-            {activityByCity.activities.map((activity: any) => {
-              return (
-                <div key={`search-page-${activityByCity.city}-${activity}`}>
-                  <Typography tag="h5">{activity}</Typography>
-                </div>
-              );
-            })}
-          </S.Activity>
+          <Activity
+            key={`search-page-${activityByCity.activity}-${activityByCity.date}`}
+            activity={activityByCity}
+          />
         );
       });
     }
@@ -56,7 +54,24 @@ const SearchPage = ({ activitiesByCity }: Props) => {
           />
           <div />
         </S.Header>
-        <S.Content>{renderActivities()}</S.Content>
+        <S.Content>
+          <S.Activities>{renderActivities()}</S.Activities>
+          <S.Filters>
+            <Typography tag="h3">Filtry</Typography>
+            <S.FilterCategory>
+              <Typography tag="h4">Data</Typography>
+              <Checkbox label="Dzisiaj" checked={true} />
+              <Checkbox label="Jutro" checked={true} />
+              <Checkbox label="Pojutrze" checked={false} />
+            </S.FilterCategory>
+            <S.FilterCategory>
+              <Typography tag="h4">Aktywności</Typography>
+              <Checkbox label="Wspinaczka" checked={true} />
+              <Checkbox label="Kolarstwo" checked={true} />
+              <Checkbox label="Pedalstwo" checked={true} />
+            </S.FilterCategory>
+          </S.Filters>
+        </S.Content>
         <S.PaginationContainer>
           <S.PageButton>
             <S.PrevButton />

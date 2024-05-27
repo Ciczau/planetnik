@@ -31,6 +31,7 @@ export const LocationProvider = ({ children }: Props) => {
       async (position) => {
         const { latitude, longitude } = position.coords;
         const res = await getActivitiesForCoordinates(latitude, longitude);
+        console.log(res.activities);
         setLocation({
           latitude,
           longitude,
