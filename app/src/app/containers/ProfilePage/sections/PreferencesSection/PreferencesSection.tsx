@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 import Button from "@/app/components/Button/Button";
 
 const weatherPatterns = [
@@ -61,8 +63,8 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-
   padding: 20px;
+
   button {
     margin: 20px 0;
   }
@@ -110,20 +112,131 @@ const Form = styled.form`
   flex-direction: column;
   align-items: flex-start;
   width: 100%;
-
   max-width: 500px;
 `;
 
-const Input = styled.input`
+const Input = styled.input<{ width?: number; error?: boolean }>`
   margin: 10px 0;
   padding: 10px;
-
-  border: 1px solid #000000;
-  width: calc(100% - 24px);
+  border: ${({ error }) => (error ? "1px solid red" : "1px solid #000000")};
+  width: ${({ width }) => (width ? `${width}px` : "100%")};
 `;
 
+const Row = styled.div`
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  gap: 10px;
+
+  p {
+    width: 240px;
+  }
+`;
+
+const CheckboxContainer = styled.div`
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+
+  input {
+    display: none;
+  }
+
+  label {
+    position: relative;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: 14px;
+    color: #333;
+  }
+
+  label::before {
+    content: "";
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 1px solid #000000;
+    border-radius: 4px;
+    margin-right: 10px;
+    background-color: white;
+    transition: background-color 0.2s;
+  }
+
+  input:checked + label::before {
+    background-color: #000000;
+    border-color: #000000;
+  }
+
+  label::after {
+    content: "";
+    position: absolute;
+    display: none;
+    top: 3px;
+    left: 7.5px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+
+  input:checked + label::after {
+    display: block;
+  }
+`;
+
+const ErrorMessage = styled.p`
+  color: red;
+  font-size: 12px;
+`;
+
+const schema = yup.object().shape({
+  location: yup
+    .string()
+    .max(255, "Lokalizacja nie może być dłuższa niż 255 znaków"),
+  windDirection: yup
+    .string()
+    .oneOf(
+      [
+        "Wschód",
+        "Zachód",
+        "Południe",
+        "Północ",
+        "Południowy Wschód",
+        "Południowy Zachód",
+        "Północny Wschód",
+        "Północny Zachód",
+      ],
+      "Niepoprawny kierunek wiatru"
+    )
+    .required("Kierunek wiatru jest wymagany"),
+  windSpeedMin: yup
+    .number()
+    .typeError("Prędkość wiatru min musi być liczbą")
+    .min(0, "Prędkość wiatru min nie może być mniejsza niż 0")
+    .required("Prędkość wiatru min jest wymagana"),
+  windSpeedMax: yup
+    .number()
+    .typeError("Prędkość wiatru max musi być liczbą")
+    .min(0, "Prędkość wiatru max nie może być mniejsza niż 0")
+    .required("Prędkość wiatru max jest wymagana"),
+  precipitation: yup.boolean().required("Opady są wymagane"),
+  activity: yup
+    .string()
+    .max(255, "Nazwa aktywności nie może być dłuższa niż 255 znaków")
+    .required("Nazwa aktywności jest wymagana"),
+});
+
 const PreferencesSection = () => {
-  const { register, handleSubmit, reset } = useForm();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(schema),
+  });
   const [patterns, setPatterns] = useState<any>(weatherPatterns);
   const [showForm, setShowForm] = useState(false);
 
@@ -133,10 +246,10 @@ const PreferencesSection = () => {
       conditions: {
         windDirection: data.windDirection,
         windSpeed: {
-          min: data.windSpeedMin ? parseInt(data.windSpeedMin) : undefined,
-          max: data.windSpeedMax ? parseInt(data.windSpeedMax) : undefined,
+          min: data.windSpeedMin ? parseInt(data.windSpeedMin) : 0,
+          max: data.windSpeedMax ? parseInt(data.windSpeedMax) : 0,
         },
-        precipitation: data.precipitation,
+        precipitation: data.precipitation ? "Tak" : "Nie",
       },
       activity: data.activity,
     };
@@ -159,33 +272,65 @@ const PreferencesSection = () => {
           <Input
             type="text"
             placeholder="Lokalizacja (opcjonalnie)"
+            error={!!errors.location}
             {...register("location")}
           />
+          {errors.location && (
+            <ErrorMessage>{errors.location.message}</ErrorMessage>
+          )}
           <Input
             type="text"
             placeholder="Kierunek wiatru"
+            error={!!errors.windDirection}
             {...register("windDirection")}
           />
-          <Input
-            type="number"
-            placeholder="Prędkość wiatru min"
-            {...register("windSpeedMin")}
-          />
-          <Input
-            type="number"
-            placeholder="Prędkość wiatru max"
-            {...register("windSpeedMax")}
-          />
+          {errors.windDirection && (
+            <ErrorMessage>{errors.windDirection.message}</ErrorMessage>
+          )}
+          <Row>
+            <Input
+              type="number"
+              width={240}
+              error={!!errors.windSpeedMin}
+              placeholder="Prędkość wiatru min"
+              {...register("windSpeedMin")}
+            />
+            <Input
+              type="number"
+              width={240}
+              error={!!errors.windSpeedMax}
+              placeholder="Prędkość wiatru max"
+              {...register("windSpeedMax")}
+            />
+          </Row>
+          <Row>
+            {errors.windSpeedMin && (
+              <ErrorMessage>{errors.windSpeedMin.message}</ErrorMessage>
+            )}
+            {errors.windSpeedMax && (
+              <ErrorMessage>{errors.windSpeedMax.message}</ErrorMessage>
+            )}
+          </Row>
+          <CheckboxContainer>
+            <input
+              type="checkbox"
+              {...register("precipitation")}
+              id="precipitation"
+            />
+            <label htmlFor="precipitation">Opady</label>
+          </CheckboxContainer>
+          {errors.precipitation && (
+            <ErrorMessage>{errors.precipitation.message}</ErrorMessage>
+          )}
           <Input
             type="text"
-            placeholder="Opady"
-            {...register("precipitation")}
-          />
-          <Input
-            type="text"
+            error={!!errors.activity}
             placeholder="Nazwa aktywności"
-            {...register("activity", { required: true })}
+            {...register("activity")}
           />
+          {errors.activity && (
+            <ErrorMessage>{errors.activity.message}</ErrorMessage>
+          )}
           <Button>Dodaj aktywność</Button>
         </Form>
       )}
