@@ -21,20 +21,34 @@ export const Form = styled.form`
   width: 100%;
   height: 100%;
   display: flex;
-  gap: 20px;
+
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
+  h1 {
+    margin-bottom: 20px;
+  }
 `;
 
 export const Information = styled.p`
+  margin: 30px 0 15px 0;
   b {
     cursor: pointer;
   }
 `;
-export const Input = styled.input`
+export const Input = styled.input<{ error: boolean }>`
   padding: 15px;
-  border: none;
   width: 400px;
-  border: 1px solid black;
+  border: ${({ error }) => (error ? "1px solid red" : "1px solid black")};
+  margin-top: 20px;
+`;
+
+export const ErrorMessage = styled.div`
+  width: 400px;
+  text-align: left;
+  color: red;
+  font-size: 14px;
+  margin: 5px 0 0px 4px;
+  font-weight: bold;
 `;
