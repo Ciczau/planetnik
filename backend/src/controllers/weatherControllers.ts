@@ -5,18 +5,19 @@ import { weatherPatterns } from "../consts/weatherPatterns";
 
 const router = express.Router();
 
-const checkForWeatherPattern = (weatherData, pattern, city?: string) => {
+const checkForWeatherPattern = (weatherData, pattern, city) => {
+  if (!weatherData) return;
   const { conditions, activity, location } = pattern;
   let matches = true;
   if (conditions.windDirection && conditions.windDirection !== "Any") {
     if (
-      !weatherData.wind ||
-      weatherData.wind.deg < 0 ||
-      (weatherData.wind.deg >= 45 &&
-        weatherData.wind.deg < 135 &&
+      !weatherData.wind_deg ||
+      weatherData.wind_deg < 0 ||
+      (weatherData.wind_deg >= 45 &&
+        weatherData.wind_deg < 135 &&
         conditions.windDirection !== "East") ||
-      (weatherData.wind.deg >= 135 &&
-        weatherData.wind.deg < 225 &&
+      (weatherData.wind_deg >= 135 &&
+        weatherData.wind_deg < 225 &&
         conditions.windDirection !== "South")
     ) {
       matches = false;
@@ -25,16 +26,16 @@ const checkForWeatherPattern = (weatherData, pattern, city?: string) => {
 
   if (
     conditions.windSpeed &&
-    (weatherData.wind.speed < conditions.windSpeed.min ||
-      weatherData.wind.speed > (conditions.windSpeed.max ?? Infinity))
+    (weatherData.wind_speed < conditions.windSpeed.min ||
+      weatherData.wind_speed > (conditions.windSpeed.max ?? Infinity))
   ) {
     matches = false;
   }
 
   if (
     conditions.temperature &&
-    (weatherData.main.temp < conditions.temperature.min ||
-      weatherData.main.temp > conditions.temperature.max)
+    (weatherData.temp.day < conditions.temperature.min ||
+      weatherData.temp.day > conditions.temperature.max)
   ) {
     matches = false;
   }
@@ -63,52 +64,52 @@ router.get("/search/:location", async (req: Request, res: Response) => {
       }
     );
 
+    const allActivities = [];
+
     const activitiesByCity = await Promise.all(
       geocodingResponse.data.results.map(async (result) => {
         const { lat, lng } = result.geometry;
         const city = result.formatted;
 
         const weatherResponse = await axios.get(
-          "https://api.openweathermap.org/data/2.5/weather",
+          "https://api.openweathermap.org/data/3.0/onecall",
           {
             params: {
               lat,
               lon: lng,
               appid: "8fcb7e25d8a1a96fe5e721fd3f69f0af",
               units: "metric",
+              exclude: "current,minutely,hourly,alerts",
             },
           }
         );
 
-        const weatherData = weatherResponse.data;
+        const weatherData = weatherResponse.data.daily.slice(0, 7);
         let activities = [];
 
-        weatherPatterns.forEach((pattern) => {
-          const { matches, activity } = checkForWeatherPattern(
-            weatherData,
-            pattern,
-            city
-          );
+        weatherData.forEach((dailyWeather) => {
+          weatherPatterns.forEach((pattern) => {
+            const { matches, activity } = checkForWeatherPattern(
+              dailyWeather,
+              pattern,
+              city
+            );
 
-          if (matches) {
-            activities.push(activity);
-          }
+            if (matches) {
+              allActivities.push({
+                activity,
+                date: dailyWeather.dt,
+                city: city,
+              });
+            }
+          });
         });
-        if (activities.length === 0) return null;
-        return { city, activities };
       })
     );
 
-    const validActivitiesByCity = activitiesByCity.filter(
-      (entry) => entry !== null
-    );
-
-    if (validActivitiesByCity.length === 0) {
-      res.json({ success: true, activitiesByCity: [] });
-    } else {
-      res.json({ success: true, activitiesByCity: validActivitiesByCity });
-    }
+    res.json({ success: true, activitiesByCity: allActivities });
   } catch (error) {
+    console.error(error);
     res.status(500).json({
       success: false,
       error: "Wystąpił błąd podczas pobierania danych",
@@ -135,7 +136,6 @@ router.get("/forecast/:lat/:lon", async (req: Request, res: Response) => {
     const weatherData = weatherResponse.data.daily.slice(0, 7);
     res.json({ success: true, weatherData });
   } catch (error) {
-    console.log(error);
     res.status(500).json({
       success: false,
       error: "Error fetching weather data",
@@ -146,29 +146,41 @@ router.get("/forecast/:lat/:lon", async (req: Request, res: Response) => {
 router.get("/search/:lat/:lng", async (req: Request, res: Response) => {
   const { lat, lng } = req.params;
 
-  const weatherResponse = await axios.get(
-    "https://api.openweathermap.org/data/2.5/weather",
-    {
-      params: {
-        lat,
-        lon: lng,
-        appid: "8fcb7e25d8a1a96fe5e721fd3f69f0af",
-        units: "metric",
-      },
-    }
-  );
+  try {
+    const weatherResponse = await axios.get(
+      "https://api.openweathermap.org/data/3.0/onecall",
+      {
+        params: {
+          lat,
+          lon: lng,
+          appid: "8fcb7e25d8a1a96fe5e721fd3f69f0af",
+          units: "metric",
+          exclude: "current,minutely,hourly,alerts",
+        },
+      }
+    );
 
-  const weatherData = weatherResponse.data;
-  let activities = [];
+    const weatherData = weatherResponse.data.daily.slice(0, 7);
+    let activities = [];
 
-  weatherPatterns.forEach((pattern) => {
-    const { matches, activity } = checkForWeatherPattern(weatherData, pattern);
+    weatherData.forEach((dailyWeather) => {
+      weatherPatterns.forEach((pattern) => {
+        const { matches, activity } = checkForWeatherPattern(
+          dailyWeather,
+          pattern
+        );
 
-    if (matches) {
-      activities.push(activity);
-    }
-  });
-  res.json({ success: true, activities: activities });
+        if (matches) {
+          activities.push({ activity, date: dailyWeather.dt });
+        }
+      });
+    });
+    res.json({ success: true, activities: activities });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: "Wystąpił błąd podczas pobierania danych",
+    });
+  }
 });
-
 export { router };
