@@ -8,7 +8,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npx tsc",
     "start": "tsc && node dist/index.js",
-    "develop": "nodemon - exec 'ts-node' ./index.ts"
+    "serve": "nodemon --exec node --loader ts-node/esm ./index.ts"
   },
   "author": "",
   "license": "ISC",
