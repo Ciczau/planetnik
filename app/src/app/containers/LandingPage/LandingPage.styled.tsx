@@ -10,7 +10,6 @@ import styled from "styled-components";
 export const Wrapper = styled.div`
   width: calc(100% - 90px);
   margin-left: 90px;
-
   padding: 40px;
   display: flex;
   flex-direction: column;
