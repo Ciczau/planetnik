@@ -31,13 +31,15 @@ export const LocationProvider = ({ children }: Props) => {
       async (position) => {
         const { latitude, longitude } = position.coords;
         const res = await getActivitiesForCoordinates(latitude, longitude);
-        console.log(res.activities);
-        setLocation({
-          latitude,
-          longitude,
-          loaded: true,
-          activities: res.activities || [],
-        });
+
+        if (res.activities) {
+          setLocation({
+            latitude,
+            longitude,
+            loaded: true,
+            activities: res.activities || [],
+          });
+        }
       },
       (error) => {
         setLocation({ error: "Allow location to use this app!", loaded: true });

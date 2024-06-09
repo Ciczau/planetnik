@@ -12,7 +12,7 @@ import { getWeatherForNextWeek } from "@/app/api/weatherRequests";
 import { Line, LineChart } from "recharts";
 import dynamic from "next/dynamic";
 import { Canvas } from "@react-three/fiber";
-import { TActivity } from "@/app/types/location";
+import { IActivity } from "@/app/types/activity";
 
 const Globe = dynamic(() => import("@/app/components/Globe/Globe"), {
   ssr: false,
@@ -61,7 +61,7 @@ const LandingPage = () => {
 
   const renderActivities = () => {
     if (location?.activities?.length) {
-      return location.activities.map((activity: TActivity) => {
+      return location.activities.slice(0, 4).map((activity: IActivity) => {
         return (
           <S.Activity
             key={`landing-page-${activity.activity}-${activity.date}`}
@@ -158,7 +158,10 @@ const LandingPage = () => {
               })}
             </S.ChartLegend>
           </S.Calendar>
-          <S.WeatherAlerts>Alerty pogodowe</S.WeatherAlerts>
+          <S.WeatherAlerts>
+            Alerty pogodowe
+            {/* TODO: Handle weather alerts - add endpoint and show it here */}
+          </S.WeatherAlerts>
           <S.RecommendedActivities>
             <Typography tag="h3">Polecane aktywności</Typography>
             {renderActivities()}
