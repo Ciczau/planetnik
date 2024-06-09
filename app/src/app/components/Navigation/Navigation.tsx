@@ -2,15 +2,17 @@ import { useRouter } from "next/router";
 import * as S from "./Navigation.styled";
 import { useUserContext } from "@/app/context/user";
 import { useCookies } from "react-cookie";
+import { logoutRequest } from "@/app/api/userRequests";
 
 const Navigation = () => {
   const [cookie, setCookie, removeCookie] = useCookies(["refreshToken"]);
   const router = useRouter();
   const user = useUserContext();
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    await logoutRequest(cookie.refreshToken);
     removeCookie("refreshToken");
-    // TODO: Use api, reset token and refresh page
+    router.reload();
   };
   return (
     <S.Wrapper>
