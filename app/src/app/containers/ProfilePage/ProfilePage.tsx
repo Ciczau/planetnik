@@ -4,11 +4,24 @@ import Typography from "@/app/components/Typography/Typography";
 import { useState } from "react";
 import Button from "@/app/components/Button/Button";
 import PreferencesSection from "./sections/PreferencesSection/PreferencesSection";
+import { useForm } from "react-hook-form";
+import { TUser } from "@/app/types/user";
 
 const ProfilePage = () => {
   const [activeSection, setActiveSection] = useState<
     "ulubione" | "preferencje" | "zapisane" | "powiadomienia" | "dane-osobowe"
-  >("ulubione");
+  >("preferencje");
+
+  const {
+    register,
+    setValue,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
+  const onSubmit = (data: any) => {
+    console.log(data);
+  };
   return (
     <S.Wrapper>
       <Navigation />
@@ -52,10 +65,21 @@ const ProfilePage = () => {
         </S.NavigationPanel>
 
         {activeSection === "dane-osobowe" && (
-          <S.Form>
-            <S.Input placeholder="Imię" />
-            <S.Input placeholder="Email" />
-            <S.Input placeholder="Numer telefonu" />
+          <S.Form onSubmit={handleSubmit(onSubmit)}>
+            <S.Input placeholder="Imię" {...register("name")} />
+            <S.Input
+              placeholder="Numer telefonu"
+              error={!!errors.phone}
+              {...register("phone", {
+                pattern: {
+                  value: /^[0-9]{9}$/,
+                  message: "Niepoprawny numer telefonu",
+                },
+              })}
+            />
+            {errors.phone && (
+              <S.ErrorMessage>{errors.phone.message as string}</S.ErrorMessage>
+            )}
 
             <Button>Zapisz zmiany</Button>
           </S.Form>
