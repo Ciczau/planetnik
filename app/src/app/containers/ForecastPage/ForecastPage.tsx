@@ -112,7 +112,7 @@ const ForecastPage = () => {
         <S.Title>Prognoza pogody na najbliższy tydzień</S.Title>
         <S.Chart>
           <S.ChartTitle>
-            <S.SunIcon /> Temperatura w dzień{" "}
+            <S.SunIcon /> Temperatura w dzień
           </S.ChartTitle>
           <S.ChartLegend>
             {weather.map((day, index) => {
@@ -127,7 +127,7 @@ const ForecastPage = () => {
             data={dayData}
             width={900}
             height={180}
-            margin={{ left: 30, right: 30 }}
+            margin={{ left: 30, right: 30, top: 30 }}
           >
             <Line
               type="monotone"
@@ -156,7 +156,7 @@ const ForecastPage = () => {
             data={nightData}
             width={900}
             height={180}
-            margin={{ left: 30, right: 30 }}
+            margin={{ left: 30, right: 30, top: 30 }}
           >
             <Line
               type="monotone"
