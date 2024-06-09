@@ -21,6 +21,7 @@ export const getActivitiesForCoordinates = async (lat: number, lng: number) => {
     return response.data;
   } catch (error) {
     console.error(error);
+    return error;
   }
 };
 
