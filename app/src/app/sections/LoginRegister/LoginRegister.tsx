@@ -78,7 +78,7 @@ const LoginRegister = ({ type }: Props) => {
   };
 
   return (
-    <S.Wrapper>
+    <S.Wrapper reverse={type === "login"}>
       <S.LeftContainer>
         {/* 
           TODO: Add image here 

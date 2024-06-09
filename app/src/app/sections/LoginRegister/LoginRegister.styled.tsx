@@ -1,20 +1,24 @@
 import styled from "styled-components";
 
-export const Wrapper = styled.div`
+export const Wrapper = styled.div<{ reverse: boolean }>`
   width: 100vw;
   height: 100vh;
   display: flex;
+  flex-direction: ${({ reverse }) => (reverse ? "row-reverse" : "row")};
 `;
 
 export const LeftContainer = styled.div`
   height: 100%;
   width: 50%;
-  background-color: gray;
+  box-shadow: 0px 0px 5px 3px #00000068;
+  filter: brightness(0.7);
+  background: url("/background.png");
 `;
 
 export const RightContainer = styled.div`
   height: 100%;
   width: 50%;
+  background-color: #ececec71;
 `;
 
 export const Form = styled.form`
