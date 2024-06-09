@@ -142,6 +142,21 @@ router.get("/:id", async (req, res) => {
     res.status(500).json({ success: false, error: e });
   }
 });
+
+router.post("/logout", async (req, res) => {
+  const { token } = req.body;
+  if (!token) {
+    return res.json({ success: false, error: "Invalid token" });
+  }
+  try {
+    await User.updateOne({ token: token }, { token: "" });
+  } catch (e) {
+    console.error("Error during logout: " + e);
+    return res.json({ success: false, error: e });
+  }
+  return res.json({ success: true });
+});
+
 router.delete("/:id", async (req, res) => {
   const { id } = req.params;
   try {
