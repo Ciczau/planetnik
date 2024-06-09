@@ -116,7 +116,6 @@ const LandingPage = () => {
             />
             <S.SearchIcon />
           </S.InputWrapper>
-          <div />
         </S.Header>
         {location?.error && <S.Warning>{location.error}</S.Warning>}
         <S.Content>

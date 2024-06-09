@@ -1,19 +1,18 @@
 import styled from "styled-components";
 
 export const Wrapper = styled.div`
+  width: calc(100% - 90px);
+  margin-left: 90px;
+  padding: 40px;
   display: flex;
-  overflow: hidden;
-  height: 100vh;
+  flex-direction: column;
+  align-items: center;
 `;
 
 export const Container = styled.div`
-  width: calc(100% - 90px);
-  margin: 0 auto;
-  overflow-y: scroll;
   max-width: 1240px;
-  padding: 40px;
+  width: 100%;
 `;
-
 export const NavigationPanel = styled.div`
   padding: 20px;
   background-color: #f5f5f5;

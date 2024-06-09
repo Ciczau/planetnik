@@ -2,32 +2,32 @@ import { FaMoon, FaSun } from "react-icons/fa";
 import styled from "styled-components";
 
 export const Wrapper = styled.div`
+  width: calc(100% - 90px);
+  margin-left: 90px;
+  padding: 40px;
   display: flex;
-  overflow: hidden;
-  height: 100vh;
+  flex-direction: column;
+  align-items: center;
 `;
 
 export const Container = styled.div`
-  width: calc(100% - 90px);
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  overflow-y: scroll;
-  gap: 50px;
   max-width: 1240px;
-  padding: 40px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
 `;
 
 export const Title = styled.div`
   font-size: 25px;
   font-weight: bold;
-  margin: 0 auto;
+  margin: 20px;
 `;
 export const Chart = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 0 auto;
+  margin: 15px auto;
   background-color: #f0f0f06a;
   padding: 25px;
   border-radius: 10px;
