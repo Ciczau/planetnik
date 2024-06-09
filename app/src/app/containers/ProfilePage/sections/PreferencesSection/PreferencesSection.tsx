@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import Button from "@/app/components/Button/Button";
+import Modal from "@/app/components/Modal/Modal";
 
 const weatherPatterns = [
   {
@@ -66,7 +67,7 @@ const Container = styled.div`
   padding: 20px;
 
   button {
-    margin: 20px 0;
+    margin-bottom: 25px;
   }
   li,
   ul {
@@ -74,8 +75,9 @@ const Container = styled.div`
   }
 `;
 
-const Title = styled.h1`
+const Title = styled.h2`
   font-size: 24px;
+  margin-bottom: 15px;
   color: #333;
 `;
 
@@ -262,11 +264,9 @@ const PreferencesSection = () => {
   return (
     <Container>
       <Title>Wybierz lub dodaj aktywność</Title>
-      <Button onClick={() => setShowForm(!showForm)}>
-        {showForm ? "Anuluj" : "Dodaj nową aktywność"}
-      </Button>
-      {/* TODO: Move this form to modal */}
-      {showForm && (
+      <Button onClick={() => setShowForm(true)}>Dodaj nową aktywność</Button>
+      <Modal isOpen={showForm} onClose={() => setShowForm(false)}>
+        <Title>Dodaj nową aktywność</Title>
         <Form onSubmit={handleSubmit(onSubmit)}>
           <Input
             type="text"
@@ -332,7 +332,7 @@ const PreferencesSection = () => {
           )}
           <Button>Dodaj aktywność</Button>
         </Form>
-      )}
+      </Modal>
       <CardList>
         {patterns.map((pattern: any, index: number) => (
           <Card key={index}>
