@@ -25,6 +25,7 @@ export const Header = styled.div`
 export const Content = styled.div`
   margin-top: 40px;
   display: flex;
+  position: relative;
   justify-content: space-between;
   gap: 20px;
 `;
@@ -43,10 +44,7 @@ export const PaginationContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 20px;
-  position: absolute;
-  bottom: 15px;
-  left: 50%;
+  margin-top: 30px;
 `;
 
 export const PageButton = styled.button<{ active?: boolean }>`
@@ -93,6 +91,7 @@ export const Activities = styled.div`
 
 export const Filters = styled.div`
   display: flex;
+  top: 20px;
   flex-direction: column;
   position: sticky;
   gap: 20px;
@@ -100,6 +99,7 @@ export const Filters = styled.div`
   border-radius: 7px;
   width: 360px;
   padding: 20px;
+  height: 600px;
 `;
 
 export const FilterCategory = styled.div`
