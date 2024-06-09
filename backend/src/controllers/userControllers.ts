@@ -42,8 +42,8 @@ router.post("/register", async (req: Request, res: Response) => {
     if (isMailFinded)
       return res.json({
         success: false,
-        message: "Mail jest już w użyciu!",
-        errCode: 1,
+        message: "Ten email jest już zajęty!",
+        field: "email",
       });
   } catch (e) {
     console.error("error during registration: " + e);
@@ -78,7 +78,11 @@ router.post("/login", async (req, res) => {
 
   const existingUser = await User.findOne({ email: email }).exec();
   if (!existingUser) {
-    return res.json({ success: false, message: "This user does not exists!" });
+    return res.json({
+      success: false,
+      field: "email",
+      message: "Nie ma użytkownika o podanym adresie email!",
+    });
   }
   const correctPassword = await bcrypt.compare(password, existingUser.password);
 
@@ -98,7 +102,11 @@ router.post("/login", async (req, res) => {
       ),
     });
   } else {
-    return res.json({ success: false, message: "Incorrect login or password" });
+    return res.json({
+      success: false,
+      field: "password",
+      message: "Podane hasło jest błędne!",
+    });
   }
 });
 

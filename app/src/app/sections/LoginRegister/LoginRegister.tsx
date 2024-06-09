@@ -51,6 +51,7 @@ const LoginRegister = ({ type }: Props) => {
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors },
   } = useForm<LoginFormInputs | RegisterFormInputs>({
     resolver: yupResolver(schema),
@@ -68,6 +69,10 @@ const LoginRegister = ({ type }: Props) => {
         router.push("/");
       } else {
         router.push("/login");
+      }
+    } else {
+      if (res.field) {
+        setError(res.field, { type: "server", message: res.message });
       }
     }
   };
