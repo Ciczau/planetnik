@@ -57,6 +57,7 @@ const SearchPage = ({ activitiesByCity }: Props) => {
         <S.Content>
           <S.Activities>{renderActivities()}</S.Activities>
           <S.Filters>
+            {/* TODO: Handle filters */}
             <Typography tag="h3">Filtry</Typography>
             <S.FilterCategory>
               <Typography tag="h4">Data</Typography>
