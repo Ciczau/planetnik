@@ -1,0 +1,5 @@
+{
+  "todo-tree.highlights.useColourScheme": true,
+  "todo-tree.general.tags": ["BUG", "FIXME", "TODO"],
+  "todo-tree.tree.autoRefresh": true
+}
