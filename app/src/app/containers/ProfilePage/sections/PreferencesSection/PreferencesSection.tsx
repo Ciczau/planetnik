@@ -254,10 +254,9 @@ const PreferencesSection = () => {
       activity: data.activity,
     };
 
-    setPatterns([...patterns, newPattern]);
+    setPatterns([newPattern, ...patterns]);
     reset();
     setShowForm(false);
-    alert("Nowa aktywność została dodana!");
   };
 
   return (

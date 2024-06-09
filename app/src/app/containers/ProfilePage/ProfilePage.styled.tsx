@@ -39,13 +39,22 @@ export const NavigationPanelItem = styled.div<{ active: boolean }>`
 export const Form = styled.form`
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 10px;
   margin-top: 20px;
   width: 50%;
   margin: 100px auto;
+
+  button {
+    margin-top: 20px;
+  }
 `;
 
-export const Input = styled.input`
+export const Input = styled.input<{ error?: boolean }>`
   padding: 10px;
-  border: 1px solid #000;
+  margin-top: 10px;
+  border: ${({ error }) => (error ? "1px solid red" : "1px solid #000000")};
+`;
+export const ErrorMessage = styled.div`
+  font-size: 12px;
+  color: red;
 `;
