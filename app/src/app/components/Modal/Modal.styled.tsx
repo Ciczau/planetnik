@@ -1,7 +1,8 @@
+import { motion } from "framer-motion";
 import { IoClose } from "react-icons/io5";
 import styled from "styled-components";
 
-export const Wrapper = styled.div`
+export const Wrapper = styled(motion.div)`
   position: fixed;
   width: 100vw;
   height: 100vh;
