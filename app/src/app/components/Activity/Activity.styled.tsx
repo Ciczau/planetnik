@@ -7,7 +7,6 @@ export const Wrapper = styled.div`
   border: 1px solid #ccc;
   border-radius: 5px;
   overflow: hidden;
-  margin: 0 auto;
 `;
 
 export const Image = styled.img`

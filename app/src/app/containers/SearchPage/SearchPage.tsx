@@ -52,7 +52,6 @@ const SearchPage = ({ activitiesByCity }: Props) => {
             width={500}
             onKeyUp={handleSearch}
           />
-          <div />
         </S.Header>
         <S.Content>
           <S.Activities>{renderActivities()}</S.Activities>

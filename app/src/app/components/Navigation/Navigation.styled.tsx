@@ -13,7 +13,10 @@ export const Wrapper = styled.div`
   width: 90px;
   height: 100vh;
   background-color: black;
+  top: 0;
+  left: 0;
   display: flex;
+  position: fixed;
   flex-direction: column;
   justify-content: space-between;
 `;

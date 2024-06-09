@@ -2,13 +2,19 @@ import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import styled from "styled-components";
 
 export const Wrapper = styled.div`
+  width: calc(100% - 90px);
+  margin-left: 90px;
+  padding: 40px;
   display: flex;
+  flex-direction: column;
+  align-items: center;
 `;
 
 export const Container = styled.div`
-  width: calc(100% - 90px);
-  padding: 40px;
+  max-width: 1240px;
+  width: 100%;
 `;
+
 export const Header = styled.div`
   display: flex;
   width: 100%;
