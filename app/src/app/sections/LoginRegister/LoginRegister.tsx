@@ -79,12 +79,7 @@ const LoginRegister = ({ type }: Props) => {
 
   return (
     <S.Wrapper reverse={type === "login"}>
-      <S.LeftContainer>
-        {/* 
-          TODO: Add image here 
-          TODO: Swap sides depends on type
-        */}
-      </S.LeftContainer>
+      <S.LeftContainer></S.LeftContainer>
       <S.RightContainer>
         <S.Form onSubmit={handleSubmit(onSubmit)}>
           <Typography tag="h1">
