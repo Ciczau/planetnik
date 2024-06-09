@@ -10,6 +10,7 @@ const Navigation = () => {
 
   const handleLogout = () => {
     removeCookie("refreshToken");
+    // TODO: Use api, reset token and refresh page
   };
   return (
     <S.Wrapper>
