@@ -11,6 +11,8 @@ type Props = {
 const font = Exo({ weight: "400", subsets: ["latin"] });
 
 const Activity = ({ activity }: Props) => {
+  // TODO: Add possibility to add type of activity to favourite
+  // TODO: Add possibility to save this specific activity
   return (
     <S.Wrapper>
       <S.Image

@@ -32,6 +32,7 @@ const ProfilePage = () => {
               active={activeSection === "ulubione"}
               onClick={() => setActiveSection("ulubione")}
             >
+              {/* TODO: Create this section */}
               <Typography tag="p">Ulubione</Typography>
             </S.NavigationPanelItem>
             <S.NavigationPanelItem
@@ -44,12 +45,14 @@ const ProfilePage = () => {
               active={activeSection === "zapisane"}
               onClick={() => setActiveSection("zapisane")}
             >
+              {/* TODO: Create this section */}
               <Typography tag="p">Zapisane</Typography>
             </S.NavigationPanelItem>
             <S.NavigationPanelItem
               active={activeSection === "powiadomienia"}
               onClick={() => setActiveSection("powiadomienia")}
             >
+              {/* TODO: Create this section */}
               <Typography tag="p">Powiadomienia</Typography>
             </S.NavigationPanelItem>
             <S.NavigationPanelItem

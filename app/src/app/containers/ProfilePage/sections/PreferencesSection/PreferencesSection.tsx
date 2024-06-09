@@ -265,7 +265,7 @@ const PreferencesSection = () => {
       <Button onClick={() => setShowForm(!showForm)}>
         {showForm ? "Anuluj" : "Dodaj nową aktywność"}
       </Button>
-
+      {/* TODO: Move this form to modal */}
       {showForm && (
         <Form onSubmit={handleSubmit(onSubmit)}>
           <Input
