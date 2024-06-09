@@ -26,7 +26,7 @@ const SearchPage = ({ activitiesByCity }: Props) => {
     if (activitiesByCity.length === 0) {
       return <Typography tag="h2">Brak aktywności w danym miejscu.</Typography>;
     } else {
-      return activitiesByCity.map((activityByCity: IActivity) => {
+      return activitiesByCity?.slice(0, 4).map((activityByCity: IActivity) => {
         return (
           <Activity
             key={`search-page-${activityByCity.activity}-${activityByCity.date}`}
@@ -72,6 +72,7 @@ const SearchPage = ({ activitiesByCity }: Props) => {
             </S.FilterCategory>
           </S.Filters>
         </S.Content>
+        {/* TODO: Move pagination to component and handle query */}
         <S.PaginationContainer>
           <S.PageButton>
             <S.PrevButton />
