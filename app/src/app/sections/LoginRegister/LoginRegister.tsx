@@ -76,7 +76,7 @@ const LoginRegister = ({ type }: Props) => {
       }
     }
   };
-
+  // TODO: Add animation swapping type
   return (
     <S.Wrapper reverse={type === "login"}>
       <S.LeftContainer></S.LeftContainer>

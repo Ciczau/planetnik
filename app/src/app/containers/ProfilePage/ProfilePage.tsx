@@ -22,6 +22,7 @@ const ProfilePage = () => {
   const onSubmit = (data: any) => {
     console.log(data);
   };
+  //TODO: Add animation swapping between sections
   return (
     <S.Wrapper>
       <Navigation />
