@@ -30,4 +30,12 @@ export const Button = styled.button<{
   border: 0;
   border-radius: 2px;
   cursor: pointer;
+  transition: 0.2s ease-in-out;
+  &:hover {
+    background-color: ${(props: { version: string }) =>
+      props.version === "primary" ? "#333" : "#f8f8f8"};
+  }
+  &:active {
+    transform: scale(0.98);
+  }
 `;
