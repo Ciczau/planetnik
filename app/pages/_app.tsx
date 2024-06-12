@@ -10,7 +10,6 @@ const font = Montserrat({ weight: "400", subsets: ["latin"] });
 function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
 
-  // TODO: Add Loader
   return (
     <div className={font.className}>
       <UserProvider>
