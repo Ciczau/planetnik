@@ -8,9 +8,11 @@ import { loginUserRequest, registerUserRequest } from "@/app/api/userRequests";
 import { useCookies } from "react-cookie";
 import Input from "@/app/components/Input/Input";
 import Typography from "@/app/components/Typography/Typography";
+import { useEffect, useState } from "react";
 
 type Props = {
   type: "login" | "register";
+  updateType: (type: "login" | "register") => void;
 };
 
 type LoginFormInputs = {
@@ -44,8 +46,10 @@ const registerSchema = yup.object().shape({
     .required("Hasło jest wymagane"),
 });
 
-const LoginRegister = ({ type }: Props) => {
+const LoginRegister = ({ type, updateType }: Props) => {
   const [cookie, setCookie] = useCookies(["refreshToken"]);
+  const [isSwapped, setIsSwapped] = useState<boolean>(false);
+  const [typeStatus, setTypeStatus] = useState<"login" | "register">(type);
 
   const schema = type === "register" ? registerSchema : loginSchema;
   const {
@@ -76,11 +80,54 @@ const LoginRegister = ({ type }: Props) => {
       }
     }
   };
-  // TODO: Add animation swapping type
+
+  const handleTypeUpdate = (type: "login" | "register") => {
+    setIsSwapped(!isSwapped);
+    setTypeStatus(type);
+    setTimeout(() => {
+      updateType(type);
+      // router.push({ pathname: `/${type}` }, undefined, { shallow: true });
+    }, 170);
+  };
   return (
-    <S.Wrapper reverse={type === "login"}>
-      <S.LeftContainer></S.LeftContainer>
-      <S.RightContainer>
+    <S.Wrapper reverse={typeStatus === "login"}>
+      <S.LeftContainer
+        initial={{ x: !(typeStatus === "login") ? 0 : "100%" }}
+        animate={{
+          x: isSwapped ? (typeStatus === "login" ? "-100%" : "100%") : 0,
+        }}
+        transition={{ duration: 0.5 }}
+      >
+        <S.OverlayContainer swap={isSwapped}>
+          <S.OverlayContent swap={isSwapped} type={true}>
+            <p>Nie masz jeszcze konta?</p>
+            <Button
+              version="secondary"
+              onClick={() => {
+                handleTypeUpdate("register");
+              }}
+            >
+              Zarejestruj się
+            </Button>
+          </S.OverlayContent>
+          <S.OverlayContent swap={!isSwapped} type={false}>
+            <p>Masz już konto?</p>
+            <Button
+              version="secondary"
+              onClick={() => handleTypeUpdate("login")}
+            >
+              Zaloguj się!
+            </Button>
+          </S.OverlayContent>
+        </S.OverlayContainer>
+      </S.LeftContainer>
+      <S.RightContainer
+        initial={{ x: !(typeStatus === "login") ? 0 : "-100%" }}
+        animate={{
+          x: isSwapped ? (typeStatus === "login" ? "100%" : "-100%") : 0,
+        }}
+        transition={{ duration: 0.5 }}
+      >
         <S.Form onSubmit={handleSubmit(onSubmit)}>
           <Typography tag="h1">
             {type === "register" ? "Rejestracja" : "Logowanie"}
@@ -120,20 +167,8 @@ const LoginRegister = ({ type }: Props) => {
           {errors.password && (
             <S.ErrorMessage>{errors.password.message}</S.ErrorMessage>
           )}
-          <S.Information>
-            {type === "register" ? (
-              <>
-                Masz już konto?{" "}
-                <b onClick={() => router.push("/login")}>Zaloguj się!</b>
-              </>
-            ) : (
-              <>
-                Nie posiadasz jeszcze konta?{" "}
-                <b onClick={() => router.push("/register")}>Zarejestruj się!</b>
-              </>
-            )}
-          </S.Information>
-          <Button version="secondary">
+
+          <Button>
             {type === "register" ? "Zarejestruj się" : "Zaloguj się"}
           </Button>
         </S.Form>

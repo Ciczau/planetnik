@@ -1,5 +1,5 @@
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 
 export const Wrapper = styled.div`
   width: calc(100% - 90px);
@@ -45,6 +45,21 @@ export const PaginationContainer = styled.div`
   align-items: center;
   justify-content: center;
   margin-top: 30px;
+`;
+
+const loaderAnimation = keyframes`
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+`;
+
+export const Loader = styled.div`
+  border: 6px solid #e4e4e4;
+  border-top: 6px solid #888888;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: ${loaderAnimation} 2s linear infinite;
+  margin: auto;
 `;
 
 export const PageButton = styled.button<{ active?: boolean }>`

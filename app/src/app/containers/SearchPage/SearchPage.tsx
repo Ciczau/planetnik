@@ -6,12 +6,26 @@ import { useRouter } from "next/router";
 import { IActivity } from "@/app/types/activity";
 import Activity from "@/app/components/Activity/Activity";
 import Checkbox from "@/app/components/Checkbox/Checkbox";
+import { useEffect, useState } from "react";
+import { debounce } from "lodash";
+import { motion } from "framer-motion";
 
 type Props = {
   activitiesByCity: IActivity[];
 };
 
+const MOCK_FILTERS = [
+  { title: "Data", filters: ["Dzisiaj", "Jutro", "Pojutrze"] },
+  {
+    title: "Aktywności",
+    filters: ["Wycieczka rowerowa", "Lot paralotnią z Jarmuży"],
+  },
+];
+
 const SearchPage = ({ activitiesByCity }: Props) => {
+  const [loaded, setLoaded] = useState<boolean>(true);
+  const [filters, setFilters] = useState<string[]>([]);
+
   const router = useRouter();
   console.log(activitiesByCity);
   const location_id = router.query.location_id as string;
@@ -26,16 +40,36 @@ const SearchPage = ({ activitiesByCity }: Props) => {
     if (activitiesByCity.length === 0) {
       return <Typography tag="h2">Brak aktywności w danym miejscu.</Typography>;
     } else {
-      return activitiesByCity?.slice(0, 4).map((activityByCity: IActivity) => {
+      return activitiesByCity?.slice(0, 6).map((activityByCity: IActivity) => {
         return (
-          <Activity
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ duration: 1 }}
             key={`search-page-${activityByCity.activity}-${activityByCity.date}`}
-            activity={activityByCity}
-          />
+          >
+            <Activity activity={activityByCity} />
+          </motion.div>
         );
       });
     }
   };
+
+  const debouncedFilters = debounce((filter: string) => {
+    setLoaded(true);
+    if (filters.includes(filter))
+      setFilters(filters.filter((f) => f !== filter));
+    else setFilters([...filters, filter]);
+  }, 500);
+
+  const handleCheckboxChange = (filter: string) => {
+    setLoaded(false);
+    debouncedFilters(filter);
+  };
+
+  useEffect(() => {
+    console.log(filters);
+  }, [filters]);
   return (
     <S.Wrapper>
       <Navigation />
@@ -55,23 +89,27 @@ const SearchPage = ({ activitiesByCity }: Props) => {
         </S.Header>
         <S.Content>
           <S.Activities>
-            {/* TODO: Add loader*/ renderActivities()}
+            {!loaded ? <S.Loader /> : renderActivities()}
           </S.Activities>
           <S.Filters>
             {/* TODO: Handle filters */}
             <Typography tag="h3">Filtry</Typography>
-            <S.FilterCategory>
-              <Typography tag="h4">Data</Typography>
-              <Checkbox label="Dzisiaj" checked={true} />
-              <Checkbox label="Jutro" checked={true} />
-              <Checkbox label="Pojutrze" checked={false} />
-            </S.FilterCategory>
-            <S.FilterCategory>
-              <Typography tag="h4">Aktywności</Typography>
-              <Checkbox label="Wspinaczka" checked={true} />
-              <Checkbox label="Kolarstwo" checked={true} />
-              <Checkbox label="Pedalstwo" checked={true} />
-            </S.FilterCategory>
+            {MOCK_FILTERS.map((filter) => {
+              return (
+                <S.FilterCategory key={filter.title}>
+                  <Typography tag="h3">{filter.title}</Typography>
+                  {filter.filters.map((filter) => {
+                    return (
+                      <Checkbox
+                        key={filter}
+                        label={filter}
+                        onChange={() => handleCheckboxChange(filter)}
+                      />
+                    );
+                  })}
+                </S.FilterCategory>
+              );
+            })}
           </S.Filters>
         </S.Content>
         {/* TODO: Move pagination to component and handle query */}

@@ -1,7 +1,9 @@
 import LoginRegister from "@/app/sections/LoginRegister/LoginRegister";
+import { useState } from "react";
 
 const LoginPage = () => {
-  return <LoginRegister type="login" />;
+  const [type, setType] = useState<"login" | "register">("login");
+  return <LoginRegister type={type} updateType={(type) => setType(type)} />;
 };
 
 export default LoginPage;

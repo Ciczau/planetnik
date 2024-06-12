@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import styled from "styled-components";
 
 export const Wrapper = styled.div`
@@ -34,6 +35,8 @@ export const NavigationPanelItem = styled.div<{ active: boolean }>`
     font-weight: ${(props) => (props.active ? "700" : "400")};
   }
 `;
+
+export const FormWrapper = styled(motion.div)``;
 
 export const Form = styled.form`
   display: flex;
