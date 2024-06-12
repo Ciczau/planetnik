@@ -1,13 +1,20 @@
+import { ChangeEvent, useEffect, useState } from "react";
 import * as S from "./Checkbox.styled";
 
 type Props = {
-  checked: boolean;
   label: string;
+  onChange: () => void;
 };
 
-const Checkbox = ({ checked, label }: Props) => {
+const Checkbox = ({ label, onChange }: Props) => {
+  const [checked, setChecked] = useState<boolean>(false);
+
+  const handleChange = () => {
+    setChecked(!checked);
+    onChange();
+  };
   return (
-    <S.CheckboxContainer>
+    <S.CheckboxContainer onClick={handleChange}>
       <input type="checkbox" checked={checked} />
       <label>{label}</label>
     </S.CheckboxContainer>

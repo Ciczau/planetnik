@@ -5,6 +5,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import Button from "@/app/components/Button/Button";
 import Modal from "@/app/components/Modal/Modal";
+import { motion } from "framer-motion";
 
 const weatherPatterns = [
   {
@@ -60,7 +61,7 @@ const weatherPatterns = [
   },
 ];
 
-const Container = styled.div`
+const Container = styled(motion.div)`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -262,7 +263,7 @@ const PreferencesSection = () => {
   };
 
   return (
-    <Container>
+    <Container initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
       <Title>Wybierz lub dodaj aktywność</Title>
       <Button onClick={() => setShowForm(true)}>Dodaj nową aktywność</Button>
       <Modal isOpen={showForm} onClose={() => setShowForm(false)}>

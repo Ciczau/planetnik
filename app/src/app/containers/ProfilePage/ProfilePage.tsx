@@ -22,7 +22,6 @@ const ProfilePage = () => {
   const onSubmit = (data: any) => {
     console.log(data);
   };
-  //TODO: Add animation swapping between sections
   return (
     <S.Wrapper>
       <Navigation />
@@ -69,25 +68,30 @@ const ProfilePage = () => {
         </S.NavigationPanel>
 
         {activeSection === "dane-osobowe" && (
-          <S.Form onSubmit={handleSubmit(onSubmit)}>
-            <S.Input placeholder="Imię" {...register("name")} />
-            <S.Input
-              placeholder="Numer telefonu"
-              error={!!errors.phone}
-              {...register("phone", {
-                pattern: {
-                  value: /^[0-9]{9}$/,
-                  message: "Niepoprawny numer telefonu",
-                },
-              })}
-            />
-            {errors.phone && (
-              <S.ErrorMessage>{errors.phone.message as string}</S.ErrorMessage>
-            )}
+          <S.FormWrapper initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+            <S.Form onSubmit={handleSubmit(onSubmit)}>
+              <S.Input placeholder="Imię" {...register("name")} />
+              <S.Input
+                placeholder="Numer telefonu"
+                error={!!errors.phone}
+                {...register("phone", {
+                  pattern: {
+                    value: /^[0-9]{9}$/,
+                    message: "Niepoprawny numer telefonu",
+                  },
+                })}
+              />
+              {errors.phone && (
+                <S.ErrorMessage>
+                  {errors.phone.message as string}
+                </S.ErrorMessage>
+              )}
 
-            <Button>Zapisz zmiany</Button>
-          </S.Form>
+              <Button>Zapisz zmiany</Button>
+            </S.Form>
+          </S.FormWrapper>
         )}
+
         {activeSection === "preferencje" && <PreferencesSection />}
       </S.Container>
     </S.Wrapper>
