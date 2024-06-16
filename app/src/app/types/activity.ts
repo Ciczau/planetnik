@@ -5,9 +5,13 @@ export interface IActivityType {
   location: string;
   conditions: {
     windDirection: string;
+    temperature: {
+      min?: number;
+      max?: number;
+    };
     windSpeed: {
-      min: number;
-      max: number;
+      min?: number;
+      max?: number;
     };
     precipitation: boolean;
   };

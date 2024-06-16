@@ -166,23 +166,44 @@ const schema = yup.object().shape({
       "Niepoprawny kierunek wiatru"
     )
     .required("Kierunek wiatru jest wymagany"),
+  tempMin: yup
+    .number()
+    .nullable()
+    .transform((value, originalValue) =>
+      originalValue.trim() === "" ? null : value
+    )
+    .typeError("Temperatura min musi być liczbą")
+    .min(0, "Temperatura min nie może być mniejsza niż 0"),
+  tempMax: yup
+    .number()
+    .nullable()
+    .transform((value, originalValue) =>
+      originalValue.trim() === "" ? null : value
+    )
+    .typeError("Temperatura max musi być liczbą")
+    .min(0, "Temperatura max nie może być mniejsza niż 0"),
   windSpeedMin: yup
     .number()
+    .nullable()
+    .transform((value, originalValue) =>
+      originalValue.trim() === "" ? null : value
+    )
     .typeError("Prędkość wiatru min musi być liczbą")
-    .min(0, "Prędkość wiatru min nie może być mniejsza niż 0")
-    .required("Prędkość wiatru min jest wymagana"),
+    .min(0, "Prędkość wiatru min nie może być mniejsza niż 0"),
   windSpeedMax: yup
     .number()
+    .nullable()
+    .transform((value, originalValue) =>
+      originalValue.trim() === "" ? null : value
+    )
     .typeError("Prędkość wiatru max musi być liczbą")
-    .min(0, "Prędkość wiatru max nie może być mniejsza niż 0")
-    .required("Prędkość wiatru max jest wymagana"),
+    .min(0, "Prędkość wiatru max nie może być mniejsza niż 0"),
   precipitation: yup.boolean().required("Opady są wymagane"),
   activity: yup
     .string()
     .max(255, "Nazwa aktywności nie może być dłuższa niż 255 znaków")
     .required("Nazwa aktywności jest wymagana"),
 });
-
 const PreferencesSection = () => {
   const {
     register,
@@ -215,9 +236,13 @@ const PreferencesSection = () => {
       location: data.location,
       conditions: {
         windDirection: data.windDirection,
+        temperature: {
+          min: data.tempMin ? parseInt(data.tempMin) : undefined,
+          max: data.tempMax ? parseInt(data.tempMax) : undefined,
+        },
         windSpeed: {
-          min: data.windSpeedMin ? parseInt(data.windSpeedMin) : 0,
-          max: data.windSpeedMax ? parseInt(data.windSpeedMax) : 0,
+          min: data.windSpeedMin ? parseInt(data.windSpeedMin) : undefined,
+          max: data.windSpeedMax ? parseInt(data.windSpeedMax) : undefined,
         },
         precipitation: data.precipitation,
       },
@@ -261,6 +286,30 @@ const PreferencesSection = () => {
             <Input
               type="number"
               width={240}
+              error={!!errors.tempMin}
+              placeholder="Temperatura minimalna"
+              {...register("tempMin")}
+            />
+            <Input
+              type="number"
+              width={240}
+              error={!!errors.tempMax}
+              placeholder="Temperatura maksymalna"
+              {...register("tempMax")}
+            />
+          </Row>
+          <Row>
+            {errors.tempMin && (
+              <ErrorMessage>{errors.tempMin.message}</ErrorMessage>
+            )}
+            {errors.tempMax && (
+              <ErrorMessage>{errors.tempMax.message}</ErrorMessage>
+            )}
+          </Row>
+          <Row>
+            <Input
+              type="number"
+              width={240}
               error={!!errors.windSpeedMin}
               placeholder="Prędkość wiatru min"
               {...register("windSpeedMin")}
@@ -281,6 +330,7 @@ const PreferencesSection = () => {
               <ErrorMessage>{errors.windSpeedMax.message}</ErrorMessage>
             )}
           </Row>
+
           <CheckboxContainer>
             <input
               type="checkbox"
