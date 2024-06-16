@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -6,60 +6,12 @@ import * as yup from "yup";
 import Button from "@/app/components/Button/Button";
 import Modal from "@/app/components/Modal/Modal";
 import { motion } from "framer-motion";
-
-const weatherPatterns = [
-  {
-    location: "Szczawnica",
-    conditions: {
-      windDirection: "Wschód",
-      windSpeed: {
-        min: 2,
-        max: 4,
-      },
-      precipitation: "Brak",
-    },
-    activity: "Latanie na paralotni z Jarmuty",
-  },
-  {
-    location: "Zalew Zegrzyński",
-    conditions: {
-      windDirection: "Dowolny",
-      windSpeed: {
-        min: 5,
-        max: 12,
-      },
-      precedingConditions: {
-        freezingDays: 4,
-        freezingTemperature: -8,
-      },
-    },
-    activity: "Regaty bojerowe",
-  },
-  {
-    conditions: {
-      temperature: {
-        min: 15,
-        max: 21,
-      },
-      windSpeed: {
-        min: 0,
-        max: 5,
-      },
-    },
-    activity: "Wycieczka rowerowa z dziećmi",
-  },
-  {
-    location: "Zatoka Pucka",
-    conditions: {
-      windDirection: "Południe",
-      windSpeed: {
-        min: 6,
-      },
-      weather: "Słonecznie",
-    },
-    activity: "Kitesurfing, surfing",
-  },
-];
+import { IActivityType } from "@/app/types/activity";
+import {
+  addActivityTypeRequest,
+  getActivityTypesRequest,
+} from "@/app/api/activityRequests";
+import { useUserContext } from "@/app/context/user";
 
 const Container = styled(motion.div)`
   display: flex;
@@ -240,11 +192,26 @@ const PreferencesSection = () => {
   } = useForm({
     resolver: yupResolver(schema),
   });
-  const [patterns, setPatterns] = useState<any>(weatherPatterns);
+  const [activityTypes, setActivityTypes] = useState<IActivityType[]>([]);
   const [showForm, setShowForm] = useState(false);
 
-  const onSubmit = (data: any) => {
-    const newPattern = {
+  const user = useUserContext();
+
+  //TODO: SSR
+  useEffect(() => {
+    const getActivityTypes = async () => {
+      const res = await getActivityTypesRequest();
+      if (res.success) {
+        setActivityTypes(res.activityTypes);
+      }
+    };
+    getActivityTypes();
+  }, []);
+
+  const onSubmit = async (data: any) => {
+    if (!user) return;
+
+    const newPattern: IActivityType = {
       location: data.location,
       conditions: {
         windDirection: data.windDirection,
@@ -252,14 +219,17 @@ const PreferencesSection = () => {
           min: data.windSpeedMin ? parseInt(data.windSpeedMin) : 0,
           max: data.windSpeedMax ? parseInt(data.windSpeedMax) : 0,
         },
-        precipitation: data.precipitation ? "Tak" : "Nie",
+        precipitation: data.precipitation,
       },
-      activity: data.activity,
+      name: data.activity,
     };
 
-    setPatterns([newPattern, ...patterns]);
-    reset();
-    setShowForm(false);
+    const res = await addActivityTypeRequest(user._id, newPattern);
+    if (res.success) {
+      setActivityTypes([res.activityType, ...activityTypes]);
+      reset();
+      setShowForm(false);
+    }
   };
 
   return (
@@ -335,7 +305,7 @@ const PreferencesSection = () => {
         </Form>
       </Modal>
       <CardList>
-        {patterns.map((pattern: any, index: number) => (
+        {activityTypes.map((pattern: any, index: number) => (
           <Card key={index}>
             <CardTitle>{pattern.activity}</CardTitle>
             <CardContent>
@@ -358,7 +328,9 @@ const PreferencesSection = () => {
                   </li>
                 )}
                 {pattern.conditions.precipitation && (
-                  <li>Opady: {pattern.conditions.precipitation}</li>
+                  <li>
+                    Opady: {pattern.conditions.precipitation ? "Tak" : "Nie"}
+                  </li>
                 )}
               </ul>
             </CardContent>
