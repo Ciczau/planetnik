@@ -13,6 +13,7 @@ import cors from "cors";
 
 import { router as userControllers } from "./src/controllers/userControllers";
 import { router as weatherControllers } from "./src/controllers/weatherControllers";
+import { router as activityTypeControllers } from "./src/controllers/activityTypeControllers";
 
 const app = express();
 app.use(cors());
@@ -21,6 +22,7 @@ app.use(express.urlencoded({ limit: "50mb", extended: true }));
 
 app.use("/api/user", userControllers);
 app.use("/api/weather", weatherControllers);
+app.use("/api/activity/type", activityTypeControllers);
 
 const PORT = process.env.PORT || 80;
 
