@@ -12,6 +12,7 @@ import {
   getActivityTypesRequest,
 } from "@/app/api/activityRequests";
 import { useUserContext } from "@/app/context/user";
+import { translateDirection } from "@/app/utils/translate";
 
 const Container = styled(motion.div)`
   display: flex;
@@ -153,16 +154,7 @@ const schema = yup.object().shape({
   windDirection: yup
     .string()
     .oneOf(
-      [
-        "Wschód",
-        "Zachód",
-        "Południe",
-        "Północ",
-        "Południowy Wschód",
-        "Południowy Zachód",
-        "Północny Wschód",
-        "Północny Zachód",
-      ],
+      ["Wschód", "Zachód", "Południe", "Północ", "Dowolny"],
       "Niepoprawny kierunek wiatru"
     )
     .required("Kierunek wiatru jest wymagany"),
@@ -235,7 +227,7 @@ const PreferencesSection = () => {
     const newPattern: IActivityType = {
       location: data.location,
       conditions: {
-        windDirection: data.windDirection,
+        windDirection: translateDirection(data.windDirection),
         temperature: {
           min: data.tempMin ? parseInt(data.tempMin) : undefined,
           max: data.tempMax ? parseInt(data.tempMax) : undefined,
@@ -357,7 +349,7 @@ const PreferencesSection = () => {
       <CardList>
         {activityTypes.map((pattern: any, index: number) => (
           <Card key={index}>
-            <CardTitle>{pattern.activity}</CardTitle>
+            <CardTitle>{pattern.name}</CardTitle>
             <CardContent>
               {pattern.location && (
                 <p>
@@ -369,7 +361,10 @@ const PreferencesSection = () => {
               </p>
               <ul>
                 {pattern.conditions.windDirection && (
-                  <li>Kierunek wiatru: {pattern.conditions.windDirection}</li>
+                  <li>
+                    Kierunek wiatru:{" "}
+                    {translateDirection(pattern.conditions.windDirection)}
+                  </li>
                 )}
                 {pattern.conditions.windSpeed && (
                   <li>

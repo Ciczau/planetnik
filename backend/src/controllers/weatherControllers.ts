@@ -1,13 +1,13 @@
 //@ts-nocheck
 import express, { Request, Response } from "express";
 import axios from "axios";
-import { weatherPatterns } from "../consts/weatherPatterns";
+import ActivityType from "../models/activityTypeModel";
 
 const router = express.Router();
 
 const checkForWeatherPattern = (weatherData, pattern, city) => {
   if (!weatherData) return;
-  const { conditions, activity, location } = pattern;
+  const { conditions, name, location } = pattern;
   let matches = true;
   if (conditions.windDirection && conditions.windDirection !== "Any") {
     if (
@@ -40,18 +40,19 @@ const checkForWeatherPattern = (weatherData, pattern, city) => {
     matches = false;
   }
 
-  if (conditions.precipitation === "None" && weatherData.rain) {
+  if (!conditions.precipitation && weatherData.rain) {
     matches = false;
   }
 
   if (city && location && !city.includes(location)) {
     matches = false;
   }
-  return { matches, activity };
+  return { matches, activity: name };
 };
 
 router.get("/search/:location", async (req: Request, res: Response) => {
   const { location } = req.params;
+  const weatherPatterns = await ActivityType.find().exec();
 
   try {
     const geocodingResponse = await axios.get(
