@@ -9,6 +9,10 @@ const ActivityTypeSchema = new Schema(
     location: String,
     conditions: {
       windDirection: String,
+      temperature: {
+        min: Number,
+        max: Number,
+      },
       windSpeed: {
         min: Number,
         max: Number,
