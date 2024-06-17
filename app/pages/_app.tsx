@@ -1,3 +1,5 @@
+import { FavouritesProvider } from "@/app/context/activities/favourities";
+import { SavedActivitiesProvider } from "@/app/context/activities/saved";
 import { LocationProvider } from "@/app/context/location";
 import { UserProvider } from "@/app/context/user";
 import GlobalStyles from "@/app/utils/globalStyles";
@@ -14,8 +16,12 @@ function MyApp({ Component, pageProps }: AppProps) {
     <div className={font.className}>
       <UserProvider>
         <LocationProvider>
-          <GlobalStyles />
-          <Component {...pageProps} key={router.asPath} />
+          <FavouritesProvider>
+            <SavedActivitiesProvider>
+              <GlobalStyles />
+              <Component {...pageProps} key={router.asPath} />
+            </SavedActivitiesProvider>
+          </FavouritesProvider>
         </LocationProvider>
       </UserProvider>
     </div>

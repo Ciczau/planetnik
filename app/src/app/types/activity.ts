@@ -2,8 +2,8 @@ export interface IActivityType {
   name: string;
   _id?: string;
   image?: string;
-  location: string;
-  conditions: {
+  location?: string;
+  conditions?: {
     windDirection: string;
     temperature: {
       min?: number;
@@ -19,6 +19,6 @@ export interface IActivityType {
 export interface IActivity {
   city: string;
   date: number;
-  type: IActivityType | string;
+  type: IActivityType;
   _id: string;
 }
