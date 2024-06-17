@@ -47,14 +47,15 @@ const checkForWeatherPattern = (weatherData, pattern, city) => {
   if (city && location && !city.includes(location)) {
     matches = false;
   }
+
   return { matches, activity: name };
 };
 
 router.get("/search/:location", async (req: Request, res: Response) => {
   const { location } = req.params;
-  const weatherPatterns = await ActivityType.find().exec();
 
   try {
+    const weatherPatterns = await ActivityType.find().exec();
     const geocodingResponse = await axios.get(
       "https://api.opencagedata.com/geocode/v1/json",
       {
@@ -67,7 +68,7 @@ router.get("/search/:location", async (req: Request, res: Response) => {
 
     const allActivities = [];
 
-    const activitiesByCity = await Promise.all(
+    await Promise.all(
       geocodingResponse.data.results.map(async (result) => {
         const { lat, lng } = result.geometry;
         const city = result.formatted;
@@ -86,7 +87,6 @@ router.get("/search/:location", async (req: Request, res: Response) => {
         );
 
         const weatherData = weatherResponse.data.daily.slice(0, 7);
-        let activities = [];
 
         weatherData.forEach((dailyWeather) => {
           weatherPatterns.forEach((pattern) => {
@@ -96,9 +96,9 @@ router.get("/search/:location", async (req: Request, res: Response) => {
               city
             );
 
-            if (matches) {
+            if (matches && !allActivities.some((a) => a.city === city)) {
               allActivities.push({
-                activity,
+                type: { name: activity },
                 date: dailyWeather.dt,
                 city: city,
               });
@@ -146,8 +146,8 @@ router.get("/forecast/:lat/:lon", async (req: Request, res: Response) => {
 
 router.get("/search/:lat/:lng", async (req: Request, res: Response) => {
   const { lat, lng } = req.params;
-
   try {
+    const weatherPatterns = await ActivityType.find().exec();
     const weatherResponse = await axios.get(
       "https://api.openweathermap.org/data/3.0/onecall",
       {
@@ -172,7 +172,7 @@ router.get("/search/:lat/:lng", async (req: Request, res: Response) => {
         );
 
         if (matches) {
-          activities.push({ activity, date: dailyWeather.dt });
+          activities.push({ type: { name: activity }, date: dailyWeather.dt });
         }
       });
     });

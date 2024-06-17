@@ -64,9 +64,9 @@ const LandingPage = () => {
       return location.activities.slice(0, 4).map((activity: IActivity) => {
         return (
           <S.Activity
-            key={`landing-page-${activity.activity}-${activity.date}`}
+            key={`landing-page-${activity.type.name}-${activity.date}`}
           >
-            <Typography tag="h4">{activity.activity}</Typography>
+            <Typography tag="h4">{activity.type.name}</Typography>
           </S.Activity>
         );
       });
