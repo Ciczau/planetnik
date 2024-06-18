@@ -173,11 +173,10 @@ router.post("/search", async (req: Request, res: Response) => {
     const weatherPatterns = favouriteActivities.map(
       (favourite) => favourite.activity
     );
-    console.log(weatherPatterns);
 
     // Pobranie nazwy miasta na podstawie współrzędnych
     const cityName = await getCityName(lat, lng);
-    console.log(cityName);
+
     // Obsługa promienia wyszukiwania
     const nearbyCitiesResponse = await axios.get(
       "https://api.opencagedata.com/geocode/v1/json",
@@ -194,7 +193,6 @@ router.post("/search", async (req: Request, res: Response) => {
 
     await Promise.all(
       nearbyCitiesResponse.data.results.map(async (result) => {
-        console.log(result);
         const { lat, lng } = result.geometry;
         const city = `${result.components.city || result.components.town}, ${
           result.components.country
@@ -244,4 +242,65 @@ router.post("/search", async (req: Request, res: Response) => {
     });
   }
 });
+
+// Nowy endpoint do alertów pogodowych
+router.get("/alerts/:lat/:lng", async (req: Request, res: Response) => {
+  const { lat, lng } = req.params;
+  const { radius } = req.query; // Dodanie obsługi promienia
+
+  try {
+    // Pobranie alertów pogodowych z OpenWeatherMap API
+    const weatherResponse = await axios.get(
+      "https://api.openweathermap.org/data/3.0/onecall",
+      {
+        params: {
+          lat,
+          lon: lng,
+          appid: "8fcb7e25d8a1a96fe5e721fd3f69f0af",
+          units: "metric",
+          exclude: "current,minutely,hourly",
+        },
+      }
+    );
+    console.log(weatherResponse.data);
+    const alerts = weatherResponse.data.alerts || [];
+
+    // Pobranie pobliskich miast w zadanym promieniu
+    const nearbyCitiesResponse = await axios.get(
+      "https://api.opencagedata.com/geocode/v1/json",
+      {
+        params: {
+          q: `${lat}+${lng}`,
+          key: "b88b17e9647e488ea8588d635a7d617f",
+          radius: radius || 10000, // Domyślnie promień 10 km
+        },
+      }
+    );
+
+    const nearbyCities = nearbyCitiesResponse.data.results.map((result) => ({
+      lat: result.geometry.lat,
+      lon: result.geometry.lng,
+      city: result.formatted,
+    }));
+
+    // Filtracja alertów pogodowych w obrębie promienia
+    const filteredAlerts = alerts.filter((alert) => {
+      return nearbyCities.some((city) => {
+        const distance = Math.sqrt(
+          Math.pow(city.lat - lat, 2) + Math.pow(city.lon - lng, 2)
+        );
+        return distance <= radius / 111.32; // Przeliczenie promienia na stopnie
+      });
+    });
+
+    res.json({ success: true, alerts: filteredAlerts });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      error: "Wystąpił błąd podczas pobierania alertów pogodowych",
+    });
+  }
+});
+
 export { router };

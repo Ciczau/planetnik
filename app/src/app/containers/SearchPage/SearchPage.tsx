@@ -9,6 +9,7 @@ import Checkbox from "@/app/components/Checkbox/Checkbox";
 import { useEffect, useState } from "react";
 import { debounce } from "lodash";
 import { motion } from "framer-motion";
+import Pagination from "@/app/components/Pagination/Pagination";
 
 type Props = {
   activitiesByCity: IActivity[];
@@ -46,7 +47,7 @@ const SearchPage = ({ activitiesByCity }: Props) => {
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             transition={{ duration: 1 }}
-            key={`search-page-${activityByCity.activity}-${activityByCity.date}`}
+            key={`search-page-${activityByCity.type.name}-${activityByCity.date}`}
           >
             <Activity activity={activityByCity} />
           </motion.div>
@@ -112,16 +113,7 @@ const SearchPage = ({ activitiesByCity }: Props) => {
             })}
           </S.Filters>
         </S.Content>
-        {/* TODO: Move pagination to component and handle query */}
-        <S.PaginationContainer>
-          <S.PageButton>
-            <S.PrevButton />
-          </S.PageButton>
-          <S.PageButton active>1</S.PageButton>
-          <S.PageButton>
-            <S.NextButton />
-          </S.PageButton>
-        </S.PaginationContainer>
+        <Pagination />
       </S.Container>
     </S.Wrapper>
   );

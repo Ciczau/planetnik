@@ -8,7 +8,10 @@ import { useRouter } from "next/router";
 import Button from "@/app/components/Button/Button";
 import { IDailyWeather } from "@/app/types/weather";
 import { PureComponent, useEffect, useState } from "react";
-import { getWeatherForNextWeek } from "@/app/api/weatherRequests";
+import {
+  getAlertsRequest,
+  getWeatherForNextWeek,
+} from "@/app/api/weatherRequests";
 import { Line, LineChart } from "recharts";
 import dynamic from "next/dynamic";
 import { Canvas } from "@react-three/fiber";
@@ -26,6 +29,7 @@ const LandingPage = () => {
   const [chartData, setChartData] = useState<{ name: string; uv: number }[]>(
     []
   );
+  const [alerts, setAlerts] = useState<any[]>([]);
 
   const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
@@ -57,8 +61,16 @@ const LandingPage = () => {
         setWeather(res.weatherData);
       }
     };
-    console.log(location);
+
+    const getAlerts = async () => {
+      if (location?.latitude && location.longitude) {
+        const res = await getAlertsRequest(30, 50);
+        console.log(res.alerts);
+        setAlerts(res.alerts);
+      }
+    };
     getWeatherForecast();
+    getAlerts();
   }, [location]);
 
   const renderActivities = () => {
@@ -164,8 +176,10 @@ const LandingPage = () => {
             </S.ChartLegend>
           </S.Calendar>
           <S.WeatherAlerts>
-            Alerty pogodowe
-            {/* TODO: Handle weather alerts - add endpoint and show it here */}
+            <Typography tag="h3">Alerty pogodowe</Typography>
+            <Typography tag="h4">
+              Brak alertów pogodowych w danym regionie.
+            </Typography>
           </S.WeatherAlerts>
           <S.RecommendedActivities>
             <Typography tag="h3">Polecane aktywności</Typography>
