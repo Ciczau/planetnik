@@ -13,6 +13,7 @@ import { Line, LineChart } from "recharts";
 import dynamic from "next/dynamic";
 import { Canvas } from "@react-three/fiber";
 import { IActivity } from "@/app/types/activity";
+import { formatDate } from "@/app/utils/date";
 
 const Globe = dynamic(() => import("@/app/components/Globe/Globe"), {
   ssr: false,
@@ -56,6 +57,7 @@ const LandingPage = () => {
         setWeather(res.weatherData);
       }
     };
+    console.log(location);
     getWeatherForecast();
   }, [location]);
 
@@ -66,7 +68,11 @@ const LandingPage = () => {
           <S.Activity
             key={`landing-page-${activity.type.name}-${activity.date}`}
           >
-            <Typography tag="h4">{activity.type.name}</Typography>
+            <div>
+              <Typography tag="h4">{activity.type.name}</Typography>
+              <Typography tag="h5">{activity.city}</Typography>
+            </div>
+            <Typography tag="p">{formatDate(activity.date)}</Typography>
           </S.Activity>
         );
       });
@@ -164,7 +170,7 @@ const LandingPage = () => {
           <S.RecommendedActivities>
             <Typography tag="h3">Polecane aktywności</Typography>
             {renderActivities()}
-            <Button onClick={() => router.push(`/search/Zduńska Wola`)}>
+            <Button onClick={() => router.push(`/recommended`)}>
               Zobacz więcej
             </Button>
           </S.RecommendedActivities>

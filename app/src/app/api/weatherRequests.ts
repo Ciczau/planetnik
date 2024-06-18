@@ -13,12 +13,24 @@ export const getWeatherForLocation = async (location: string) => {
   }
 };
 
-export const getActivitiesForCoordinates = async (lat: number, lng: number) => {
+export const getActivitiesForCoordinates = async (
+  lat: number,
+  lng: number,
+  userId: string,
+  radius: number
+) => {
   try {
     const response = await instance({
-      url: `${API_WEATHER}/search/${lat}/${lng}`,
-      method: "GET",
+      url: `${API_WEATHER}/search`,
+      method: "POST",
+      data: {
+        lat,
+        lng,
+        userId,
+        radius,
+      },
     });
+    console.log(response);
     return response.data;
   } catch (error) {
     console.error(error);

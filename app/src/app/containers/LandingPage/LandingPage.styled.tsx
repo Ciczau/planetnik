@@ -73,9 +73,6 @@ export const RecommendedActivities = styled.div`
   h3 {
     padding: 20px;
   }
-  h4 {
-    padding: 20px;
-  }
 `;
 
 export const Glob = styled(WeatherAlerts)`
@@ -84,6 +81,17 @@ export const Glob = styled(WeatherAlerts)`
 `;
 export const Activity = styled.div`
   border-bottom: 1px solid #dddddd;
+  padding: 15px;
+  div {
+    display: flex;
+    flex-direction: column;
+  }
+  p {
+    font-weight: bold;
+  }
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 `;
 export const ChartLegend = styled.div`
   margin-top: 10px;
