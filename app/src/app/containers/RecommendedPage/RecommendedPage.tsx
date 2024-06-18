@@ -31,7 +31,6 @@ const RecommendedPage = () => {
     }
   };
 
-  //TODO: Apply <Activity /> component and get data from API, so handle this by favourites
   return (
     <S.Wrapper>
       <Navigation />
