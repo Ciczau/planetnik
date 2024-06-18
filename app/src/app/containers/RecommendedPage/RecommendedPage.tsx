@@ -5,6 +5,7 @@ import Input from "@/app/components/Input/Input";
 import { useRouter } from "next/router";
 import { useLocationContext } from "@/app/context/location";
 import Activity from "@/app/components/Activity/Activity";
+import Pagination from "@/app/components/Pagination/Pagination";
 
 const RecommendedPage = () => {
   const router = useRouter();
@@ -42,15 +43,7 @@ const RecommendedPage = () => {
           <div />
         </S.Header>
         <S.Content>{renderActivities()}</S.Content>
-        <S.PaginationContainer>
-          <S.PageButton>
-            <S.PrevButton />
-          </S.PageButton>
-          <S.PageButton active>1</S.PageButton>
-          <S.PageButton>
-            <S.NextButton />
-          </S.PageButton>
-        </S.PaginationContainer>
+        <Pagination />
       </S.Container>
     </S.Wrapper>
   );

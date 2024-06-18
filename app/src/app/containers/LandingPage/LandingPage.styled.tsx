@@ -58,6 +58,9 @@ export const WeatherAlerts = styled.div`
   width: calc(100% - 570px);
   box-shadow: 1px 3px 5px rgba(0, 0, 0, 0.25);
   padding: 20px;
+  h4 {
+    margin-top: 10px;
+  }
 `;
 
 export const RecommendedActivities = styled.div`

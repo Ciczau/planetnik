@@ -46,3 +46,12 @@ export const getWeatherForNextWeek = async (lat: number, lng: number) => {
     console.error(err);
   }
 };
+
+export const getAlertsRequest = async (lat: number, lng: number) => {
+  try {
+    const res = await instance.get(`${API_WEATHER}/alerts/${lat}/${lng}`);
+    return res.data;
+  } catch (err) {
+    console.error(err);
+  }
+};
