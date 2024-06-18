@@ -78,7 +78,7 @@ const LandingPage = () => {
       });
     } else {
       return (
-        <Typography tag="h4">
+        <Typography tag="p">
           Brak rekomendowanych aktywności w tej lokalizacji
         </Typography>
       );
