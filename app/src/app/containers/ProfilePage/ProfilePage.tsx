@@ -6,12 +6,17 @@ import Button from "@/app/components/Button/Button";
 import PreferencesSection from "./sections/PreferencesSection/PreferencesSection";
 import { useForm } from "react-hook-form";
 import { TUser } from "@/app/types/user";
+import { useSavedActivitiesContext } from "@/app/context/activities/saved";
+import Activity from "@/app/components/Activity/Activity";
+import { useFavouritesContext } from "@/app/context/activities/favourities";
 
 const ProfilePage = () => {
   const [activeSection, setActiveSection] = useState<
     "ulubione" | "preferencje" | "zapisane" | "powiadomienia" | "dane-osobowe"
   >("preferencje");
 
+  const { saved } = useSavedActivitiesContext();
+  const { favourites } = useFavouritesContext();
   const {
     register,
     setValue,
@@ -32,7 +37,6 @@ const ProfilePage = () => {
               active={activeSection === "ulubione"}
               onClick={() => setActiveSection("ulubione")}
             >
-              {/* TODO: Create this section */}
               <Typography tag="p">Ulubione</Typography>
             </S.NavigationPanelItem>
             <S.NavigationPanelItem
@@ -45,7 +49,6 @@ const ProfilePage = () => {
               active={activeSection === "zapisane"}
               onClick={() => setActiveSection("zapisane")}
             >
-              {/* TODO: Create this section */}
               <Typography tag="p">Zapisane</Typography>
             </S.NavigationPanelItem>
             <S.NavigationPanelItem
@@ -93,6 +96,49 @@ const ProfilePage = () => {
         )}
 
         {activeSection === "preferencje" && <PreferencesSection />}
+        {activeSection === "zapisane" && (
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: "15px",
+              marginTop: "25px",
+            }}
+          >
+            <Typography tag="h3">Zapisane zdarzenia:</Typography>
+            {saved?.map((activity) => (
+              <Activity
+                activity={activity}
+                key={`${activity.city}-${activity.date}`}
+              />
+            ))}
+          </div>
+        )}
+        {activeSection === "ulubione" && (
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: "15px",
+              marginTop: "25px",
+            }}
+          >
+            <Typography tag="h3">Ulubione aktywności:</Typography>
+            {favourites?.map((activity) => (
+              <div
+                key={`${activity.name}`}
+                style={{
+                  padding: "15px 25px",
+                  boxShadow: "0px 0px 5px 3px #0000002d",
+                }}
+              >
+                <Typography tag="h4">{activity.name}</Typography>
+              </div>
+            ))}
+          </div>
+        )}
       </S.Container>
     </S.Wrapper>
   );
