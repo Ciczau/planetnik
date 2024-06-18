@@ -30,11 +30,13 @@ export const LocationProvider = ({ children }: Props) => {
       return;
     }
 
-    if (!user) return;
-
     navigator.geolocation.getCurrentPosition(
       async (position) => {
         const { latitude, longitude } = position.coords;
+        if (!user) {
+          setLocation({ latitude, longitude, loaded: true, activities: [] });
+          return;
+        }
         const res = await getActivitiesForCoordinates(
           latitude,
           longitude,

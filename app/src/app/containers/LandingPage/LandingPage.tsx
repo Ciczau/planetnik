@@ -17,6 +17,7 @@ import dynamic from "next/dynamic";
 import { Canvas } from "@react-three/fiber";
 import { IActivity } from "@/app/types/activity";
 import { formatDate } from "@/app/utils/date";
+import { useUserContext } from "@/app/context/user";
 
 const Globe = dynamic(() => import("@/app/components/Globe/Globe"), {
   ssr: false,
@@ -24,6 +25,7 @@ const Globe = dynamic(() => import("@/app/components/Globe/Globe"), {
 
 const LandingPage = () => {
   const location = useLocationContext();
+  const user = useUserContext();
   const router = useRouter();
   const [weather, setWeather] = useState<IDailyWeather[]>([]);
   const [chartData, setChartData] = useState<{ name: string; uv: number }[]>(
@@ -53,6 +55,7 @@ const LandingPage = () => {
 
   useEffect(() => {
     const getWeatherForecast = async () => {
+      console.log(location?.latitude, location?.longitude);
       if (location?.latitude && location.longitude) {
         const res = await getWeatherForNextWeek(
           location.latitude,
@@ -135,65 +138,78 @@ const LandingPage = () => {
             <S.SearchIcon />
           </S.InputWrapper>
         </S.Header>
-        {location?.error && <S.Warning>{location.error}</S.Warning>}
-        <S.Content>
-          <S.Calendar>
-            <Typography tag="h3">Kalendarz pogodowy</Typography>
-            <S.IconsWrapper>
-              {weather.map((day, index) => {
-                if (day.weather[0].main === "Rain") {
-                  return <S.RainIcon key={index} />;
-                } else if (day.weather[0].main === "Clouds") {
-                  return <S.CloudIcon key={index} />;
-                } else {
-                  return <S.SunIcon key={index} />;
-                }
-              })}
-            </S.IconsWrapper>
-            <LineChart
-              data={chartData}
-              width={510}
-              height={150}
-              margin={{ left: 30, right: 30 }}
-            >
-              <Line
-                type="monotone"
-                dataKey="uv"
-                stroke="#fce309"
-                isAnimationActive={false}
-                strokeWidth={2}
-                label={<CustomizedLabel />}
-              />
-            </LineChart>
-            <S.ChartLegend>
-              {weather.map((day, index) => {
-                return (
-                  <div key={index}>
-                    {new Date(day.dt * 1000).toLocaleDateString().slice(0, -5)}
-                  </div>
-                );
-              })}
-            </S.ChartLegend>
-          </S.Calendar>
-          <S.WeatherAlerts>
-            <Typography tag="h3">Alerty pogodowe</Typography>
-            <Typography tag="h4">
-              Brak alertów pogodowych w danym regionie.
-            </Typography>
-          </S.WeatherAlerts>
-          <S.RecommendedActivities>
-            <Typography tag="h3">Polecane aktywności</Typography>
-            {renderActivities()}
-            <Button onClick={() => router.push(`/recommended`)}>
-              Zobacz więcej
-            </Button>
-          </S.RecommendedActivities>
-          <S.Glob>
-            <Canvas>
-              <Globe />
-            </Canvas>
-          </S.Glob>
-        </S.Content>
+        {location?.error ? (
+          <S.Warning>{location.error}</S.Warning>
+        ) : (
+          <S.Content>
+            <S.Calendar>
+              <Typography tag="h3">Kalendarz pogodowy</Typography>
+              <S.IconsWrapper>
+                {weather.map((day, index) => {
+                  if (day.weather[0].main === "Rain") {
+                    return <S.RainIcon key={index} />;
+                  } else if (day.weather[0].main === "Clouds") {
+                    return <S.CloudIcon key={index} />;
+                  } else {
+                    return <S.SunIcon key={index} />;
+                  }
+                })}
+              </S.IconsWrapper>
+              <LineChart
+                data={chartData}
+                width={510}
+                height={150}
+                margin={{ left: 30, right: 30 }}
+              >
+                <Line
+                  type="monotone"
+                  dataKey="uv"
+                  stroke="#fce309"
+                  isAnimationActive={false}
+                  strokeWidth={2}
+                  label={<CustomizedLabel />}
+                />
+              </LineChart>
+              <S.ChartLegend>
+                {weather.map((day, index) => {
+                  return (
+                    <div key={index}>
+                      {new Date(day.dt * 1000)
+                        .toLocaleDateString()
+                        .slice(0, -5)}
+                    </div>
+                  );
+                })}
+              </S.ChartLegend>
+            </S.Calendar>
+            <S.WeatherAlerts>
+              <Typography tag="h3">Alerty pogodowe</Typography>
+              <Typography tag="h4">
+                Brak alertów pogodowych w danym regionie.
+              </Typography>
+            </S.WeatherAlerts>
+            <S.RecommendedActivities>
+              <Typography tag="h3">Polecane aktywności</Typography>
+              {user?._id ? (
+                <>
+                  {renderActivities()}
+                  <Button onClick={() => router.push(`/recommended`)}>
+                    Zobacz więcej
+                  </Button>
+                </>
+              ) : (
+                <Typography tag="p">
+                  Zaloguj się aby zobaczyć tą sekcje!
+                </Typography>
+              )}
+            </S.RecommendedActivities>
+            <S.Glob>
+              <Canvas>
+                <Globe />
+              </Canvas>
+            </S.Glob>
+          </S.Content>
+        )}
       </S.Container>
     </S.Wrapper>
   );
