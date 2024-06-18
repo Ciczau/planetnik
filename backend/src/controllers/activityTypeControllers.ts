@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import ActivityType from "../models/activityTypeModel";
+import ActivityType from "../models/activityTypeModel.js";
 
 const router = express.Router();
 

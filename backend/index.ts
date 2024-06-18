@@ -11,11 +11,11 @@ import mongoose from "mongoose";
 import express from "express";
 import cors from "cors";
 
-import { router as userControllers } from "./src/controllers/userControllers";
-import { router as weatherControllers } from "./src/controllers/weatherControllers";
-import { router as activityControllers } from "./src/controllers/activityControllers";
-import { router as activityTypeControllers } from "./src/controllers/activityTypeControllers";
-import { router as favouritesControllers } from "./src/controllers/favouritesControllers";
+import { router as userControllers } from "./src/controllers/userControllers.js";
+import { router as weatherControllers } from "./src/controllers/weatherControllers.js";
+import { router as activityControllers } from "./src/controllers/activityControllers.js";
+import { router as activityTypeControllers } from "./src/controllers/activityTypeControllers.js";
+import { router as favouritesControllers } from "./src/controllers/favouritesControllers.js";
 
 const app = express();
 app.use(cors());

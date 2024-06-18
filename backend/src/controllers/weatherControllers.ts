@@ -1,8 +1,8 @@
 //@ts-nocheck
 import express, { Request, Response } from "express";
 import axios from "axios";
-import ActivityType from "../models/activityTypeModel";
-import Favourites from "../models/favouritesModel";
+import ActivityType from "../models/activityTypeModel.js";
+import Favourites from "../models/favouritesModel.js";
 
 const router = express.Router();
 

@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
-import Favourites from "../models/favouritesModel";
-import Activity from "../models/activityModel";
-import ActivityType from "../models/activityTypeModel";
+import Favourites from "../models/favouritesModel.js";
+import Activity from "../models/activityModel.js";
+import ActivityType from "../models/activityTypeModel.js";
 
 const router = express.Router();
 
