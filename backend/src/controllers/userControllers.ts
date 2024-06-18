@@ -4,8 +4,11 @@ import express, { Response, Request } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
-import User from "../models/userModel";
-import { validateUserLogin, validateUserRegister } from "../utils/validateUser";
+import User from "../models/userModel.js";
+import {
+  validateUserLogin,
+  validateUserRegister,
+} from "../utils/validateUser.js";
 
 const expiration = "168h";
 const router = express.Router();
