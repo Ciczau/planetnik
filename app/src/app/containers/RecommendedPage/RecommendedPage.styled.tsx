@@ -24,6 +24,9 @@ export const Header = styled.div`
 
 export const Content = styled.div`
   margin-top: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 `;
 
 export const Activity = styled.div`

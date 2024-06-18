@@ -6,6 +6,7 @@ import { TUser } from "../types/user";
 import { tokenRequest } from "../api/userRequests";
 import { TLocation } from "../types/location";
 import { getActivitiesForCoordinates } from "../api/weatherRequests";
+import { useUserContext } from "./user";
 
 export const LocationContext = React.createContext<TLocation | null>(null);
 
@@ -21,17 +22,26 @@ interface Props {
 export const LocationProvider = ({ children }: Props) => {
   const [location, setLocation] = useState<TLocation | null>(null);
 
+  const user = useUserContext();
+
   useEffect(() => {
     if (!navigator.geolocation) {
       setLocation({ loaded: true, error: "Geolocation is not supported" });
       return;
     }
 
+    if (!user) return;
+
     navigator.geolocation.getCurrentPosition(
       async (position) => {
         const { latitude, longitude } = position.coords;
-        const res = await getActivitiesForCoordinates(latitude, longitude);
-
+        const res = await getActivitiesForCoordinates(
+          latitude,
+          longitude,
+          user?._id,
+          1000
+        );
+        console.log(res);
         if (res.activities) {
           setLocation({
             latitude,
@@ -45,7 +55,7 @@ export const LocationProvider = ({ children }: Props) => {
         setLocation({ error: "Allow location to use this app!", loaded: true });
       }
     );
-  }, []);
+  }, [user]);
 
   return (
     <LocationContext.Provider value={location}>

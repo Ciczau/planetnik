@@ -3,21 +3,12 @@ import * as S from "./RecommendedPage.styled";
 import Typography from "@/app/components/Typography/Typography";
 import Input from "@/app/components/Input/Input";
 import { useRouter } from "next/router";
+import { useLocationContext } from "@/app/context/location";
+import Activity from "@/app/components/Activity/Activity";
 
-const mockActivites = [
-  {
-    city: "Zduńska Wola",
-    activities: ["Przejażdżka rowerowa z dziećmi", "Spacer po parku"],
-  },
-  {
-    city: "Henryków",
-    activities: ["Spacer po lesie"],
-  },
-];
-
-const SearchPage = () => {
+const RecommendedPage = () => {
   const router = useRouter();
-  const location_id = router.query.location_id as string;
+  const location = useLocationContext();
 
   const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
@@ -26,21 +17,15 @@ const SearchPage = () => {
   };
 
   const renderActivities = () => {
-    if (mockActivites.length === 0) {
+    if (location?.activities?.length === 0) {
       return <Typography tag="h2">Brak aktywności w danym miejscu.</Typography>;
     } else {
-      return mockActivites.map((activityByCity: any) => {
+      return location?.activities?.map((activityByCity: any) => {
         return (
-          <S.Activity key={`search-page-${activityByCity.city}`}>
-            <Typography tag="h4">{activityByCity.city}</Typography>
-            {activityByCity.activities.map((activity: any) => {
-              return (
-                <div key={`search-page-${activityByCity.city}-${activity}`}>
-                  <Typography tag="h5">{activity}</Typography>
-                </div>
-              );
-            })}
-          </S.Activity>
+          <Activity
+            activity={activityByCity}
+            key={`${activityByCity.city}-${activityByCity.date}`}
+          />
         );
       });
     }
@@ -72,4 +57,4 @@ const SearchPage = () => {
   );
 };
 
-export default SearchPage;
+export default RecommendedPage;
