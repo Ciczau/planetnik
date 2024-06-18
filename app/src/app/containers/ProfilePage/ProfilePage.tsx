@@ -13,7 +13,7 @@ import { useFavouritesContext } from "@/app/context/activities/favourities";
 const ProfilePage = () => {
   const [activeSection, setActiveSection] = useState<
     "ulubione" | "preferencje" | "zapisane" | "powiadomienia" | "dane-osobowe"
-  >("preferencje");
+  >("ulubione");
 
   const { saved } = useSavedActivitiesContext();
   const { favourites } = useFavouritesContext();
