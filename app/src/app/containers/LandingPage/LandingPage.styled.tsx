@@ -73,6 +73,10 @@ export const RecommendedActivities = styled.div`
   h3 {
     padding: 20px;
   }
+
+  p {
+    padding: 0px 20px;
+  }
 `;
 
 export const Glob = styled(WeatherAlerts)`

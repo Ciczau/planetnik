@@ -196,7 +196,9 @@ router.post("/search", async (req: Request, res: Response) => {
       nearbyCitiesResponse.data.results.map(async (result) => {
         console.log(result);
         const { lat, lng } = result.geometry;
-        const city = `${result.components.city}, ${result.components.country}`;
+        const city = `${result.components.city || result.components.town}, ${
+          result.components.country
+        }`;
 
         const weatherResponse = await axios.get(
           "https://api.openweathermap.org/data/3.0/onecall",
