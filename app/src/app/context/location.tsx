@@ -43,7 +43,7 @@ export const LocationProvider = ({ children }: Props) => {
           user?._id,
           1000
         );
-        console.log(res);
+
         if (res.activities) {
           setLocation({
             latitude,

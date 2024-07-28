@@ -10,25 +10,25 @@ import { useEffect, useState } from "react";
 import { debounce } from "lodash";
 import { motion } from "framer-motion";
 import Pagination from "@/app/components/Pagination/Pagination";
+import { IFilter, IFilters } from "@/app/types/filters";
+import { getFiltersRequest } from "@/app/api/searchRequests";
 
 type Props = {
   activitiesByCity: IActivity[];
 };
 
-const MOCK_FILTERS = [
-  { title: "Data", filters: ["Dzisiaj", "Jutro", "Pojutrze"] },
-  {
-    title: "Aktywności",
-    filters: ["Wycieczka rowerowa", "Lot paralotnią z Jarmuży"],
-  },
-];
-
 const SearchPage = ({ activitiesByCity }: Props) => {
   const [loaded, setLoaded] = useState<boolean>(true);
-  const [filters, setFilters] = useState<string[]>([]);
+  const [filters, setFilters] = useState<IFilters[]>([]);
+  const [checkedFilters, setCheckedFilters] = useState<
+    { name: string; values: string[] }[]
+  >([]);
+  const [activities, setActivities] = useState<IActivity[]>(
+    activitiesByCity || []
+  );
 
   const router = useRouter();
-  console.log(activitiesByCity);
+
   const location_id = router.query.location_id as string;
 
   const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -38,10 +38,10 @@ const SearchPage = ({ activitiesByCity }: Props) => {
   };
 
   const renderActivities = () => {
-    if (activitiesByCity.length === 0) {
+    if (activities.length === 0) {
       return <Typography tag="h2">Brak aktywności w danym miejscu.</Typography>;
     } else {
-      return activitiesByCity?.slice(0, 6).map((activityByCity: IActivity) => {
+      return activities?.map((activityByCity: IActivity) => {
         return (
           <motion.div
             initial={{ opacity: 0 }}
@@ -56,21 +56,103 @@ const SearchPage = ({ activitiesByCity }: Props) => {
     }
   };
 
-  const debouncedFilters = debounce((filter: string) => {
+  const debouncedFilters = debounce((filter: IFilter, section: string) => {
     setLoaded(true);
-    if (filters.includes(filter))
-      setFilters(filters.filter((f) => f !== filter));
-    else setFilters([...filters, filter]);
+
+    const existingValues =
+      router.query[section] && typeof router.query[section] === "string"
+        ? router.query[section].split(",")
+        : [];
+
+    const newValues = handleChecked(filter, section)
+      ? existingValues.filter((v) => v !== filter.value)
+      : [...existingValues, filter.value];
+    const uniqueValues = Array.from(new Set(newValues));
+
+    router.replace(
+      {
+        pathname: router.route,
+        query: {
+          ...router.query,
+          [section]:
+            uniqueValues.length !== 0 ? uniqueValues.join(",") : undefined,
+        },
+      },
+      { pathname: router.route },
+      { shallow: true }
+    );
+
+    setCheckedFilters((prev) => {
+      const newFilters = prev.map((f) => {
+        if (f.name === section) {
+          return { name: f.name, values: uniqueValues };
+        }
+        return f;
+      });
+      return newFilters;
+    });
   }, 500);
 
-  const handleCheckboxChange = (filter: string) => {
+  const handleCheckboxChange = (filter: IFilter, section: string) => {
     setLoaded(false);
-    debouncedFilters(filter);
+    debouncedFilters(filter, section);
   };
 
   useEffect(() => {
-    console.log(filters);
+    const getFilters = async () => {
+      const res = await getFiltersRequest();
+      setFilters(res.filters);
+    };
+    getFilters();
   }, [filters]);
+
+  useEffect(() => {
+    const filteredActivites = activitiesByCity.filter((activity) => {
+      return checkedFilters.every((filter) => {
+        if (filter.values.length === 0) return true;
+        if (filter.name === "Data") {
+          return filter.values.includes(
+            new Date(activity.date * 1000).toISOString().split("T")[0]
+          );
+        }
+        if (filter.name === "Aktywności") {
+          return filter.values.includes(activity.type.name);
+        }
+        return true;
+      });
+    });
+    setActivities(checkedFilters.length ? filteredActivites : activitiesByCity);
+  }, [activitiesByCity, checkedFilters]);
+
+  useEffect(() => {
+    if (router.query) {
+      const fetchedFilters = Object.keys(router.query).map((key) => {
+        if (router.query[key]) {
+          return {
+            name: key,
+            values:
+              typeof router.query[key] === "string"
+                ? router.query[key].split(",")
+                : router.query[key],
+          };
+        }
+        return { name: key, values: [] };
+      });
+      setCheckedFilters(fetchedFilters);
+    }
+  }, [router.query]);
+
+  const handleChecked = (filter: IFilter, section: string) => {
+    if (
+      checkedFilters.map((f) => f.name).includes(section) &&
+      checkedFilters
+        .filter((f) => f.name === section)[0]
+        .values.includes(filter.value)
+    ) {
+      return true;
+    }
+    return false;
+  };
   return (
     <S.Wrapper>
       <Navigation />
@@ -93,18 +175,20 @@ const SearchPage = ({ activitiesByCity }: Props) => {
             {!loaded ? <S.Loader /> : renderActivities()}
           </S.Activities>
           <S.Filters>
-            {/* TODO: Handle filters */}
             <Typography tag="h3">Filtry</Typography>
-            {MOCK_FILTERS.map((filter) => {
+            {filters.map((section) => {
               return (
-                <S.FilterCategory key={filter.title}>
-                  <Typography tag="h3">{filter.title}</Typography>
-                  {filter.filters.map((filter) => {
+                <S.FilterCategory key={`search-filters-${section.name}`}>
+                  <Typography tag="h3">{section.name}</Typography>
+                  {section.filters.map((filter) => {
                     return (
                       <Checkbox
-                        key={filter}
-                        label={filter}
-                        onChange={() => handleCheckboxChange(filter)}
+                        key={filter.value}
+                        label={filter.name}
+                        checked={handleChecked(filter, section.name)}
+                        onChange={() =>
+                          handleCheckboxChange(filter, section.name)
+                        }
                       />
                     );
                   })}
