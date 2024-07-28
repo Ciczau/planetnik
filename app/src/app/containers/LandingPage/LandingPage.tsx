@@ -50,12 +50,10 @@ const LandingPage = () => {
     if (weather) {
       getDataForCharts();
     }
-    console.log(weather);
   }, [weather]);
 
   useEffect(() => {
     const getWeatherForecast = async () => {
-      console.log(location?.latitude, location?.longitude);
       if (location?.latitude && location.longitude) {
         const res = await getWeatherForNextWeek(
           location.latitude,
@@ -68,8 +66,10 @@ const LandingPage = () => {
     const getAlerts = async () => {
       if (location?.latitude && location.longitude) {
         const res = await getAlertsRequest(30, 50);
-        console.log(res.alerts);
-        setAlerts(res.alerts);
+
+        if (res.alerts) {
+          setAlerts(res.alerts);
+        }
       }
     };
     getWeatherForecast();

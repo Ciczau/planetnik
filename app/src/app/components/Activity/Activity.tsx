@@ -43,20 +43,12 @@ const Activity = ({ activity }: Props) => {
     if (!user) return;
     if (isSaved) {
       const res = await saveActivityRequest(user?._id, activity);
-      console.log(res);
       if (res.success) {
         setSaved([...saved, activity]);
       }
     } else {
       const res = await removeSavedActivityRequest(user?._id, activity);
-      console.log(
-        saved?.filter(
-          (el) =>
-            el.city !== activity.city &&
-            el.date !== activity.date &&
-            el.type.name !== activity.type.name
-        )
-      );
+
       if (res.success) {
         setSaved(
           saved?.filter(
@@ -71,14 +63,7 @@ const Activity = ({ activity }: Props) => {
       }
     }
   };
-  console.log(
-    saved?.filter(
-      (el) =>
-        el.city === activity.city &&
-        el.date === activity.date &&
-        el.type.name === activity.type.name
-    )
-  );
+
   return (
     <S.Wrapper>
       <S.Image

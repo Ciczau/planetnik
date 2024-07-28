@@ -4,13 +4,11 @@ import * as S from "./Checkbox.styled";
 type Props = {
   label: string;
   onChange: () => void;
+  checked: boolean;
 };
 
-const Checkbox = ({ label, onChange }: Props) => {
-  const [checked, setChecked] = useState<boolean>(false);
-
+const Checkbox = ({ label, onChange, checked }: Props) => {
   const handleChange = () => {
-    setChecked(!checked);
     onChange();
   };
   return (

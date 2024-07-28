@@ -21,7 +21,7 @@ router.post("/add", async (req: Request, res: Response) => {
   const searchedActivityType = await ActivityType.findOne({
     name: type,
   });
-  console.log(searchedActivityType);
+
   if (!searchedActivityType)
     return res.json({ success: false, message: "Activity type not found" });
   const favourite = new Favourites({
