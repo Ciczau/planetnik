@@ -16,6 +16,7 @@ import { router as weatherControllers } from "./src/controllers/weatherControlle
 import { router as activityControllers } from "./src/controllers/activityControllers.js";
 import { router as activityTypeControllers } from "./src/controllers/activityTypeControllers.js";
 import { router as favouritesControllers } from "./src/controllers/favouritesControllers.js";
+import { router as searchControllers } from "./src/controllers/searchControllers.js";
 
 const app = express();
 app.use(cors());
@@ -27,6 +28,7 @@ app.use("/api/weather", weatherControllers);
 app.use("/api/activity", activityControllers);
 app.use("/api/activity/type", activityTypeControllers);
 app.use("/api/activity/favourites", favouritesControllers);
+app.use("/api/search", searchControllers);
 
 const PORT = process.env.PORT || 80;
 
