@@ -26,7 +26,6 @@ router.post("/saved/add", async (req: Request, res: Response) => {
     activityTypeId = searchedActivityType._id;
   }
   const searchedActivity = await Activity.findById(activityId).exec();
-  console.log(activityId);
   if (!searchedActivity) {
     const newActivity = new Activity({
       type: activityTypeId,
@@ -36,7 +35,6 @@ router.post("/saved/add", async (req: Request, res: Response) => {
     const savedActivity = await newActivity.save();
     activityId = savedActivity._id;
   }
-  console.log(activityId);
   try {
     const saved = new Saved({ user: userId, activity: activityId });
     const savedActivity = await saved.save();
@@ -62,9 +60,6 @@ router.post("/saved/remove", async (req: Request, res: Response) => {
 
   try {
     const test = await Saved.find().exec();
-    console.log(test);
-    console.log(userId);
-    console.log(searchedActivity?._id);
     await Saved.deleteOne({
       user: userId,
       activity: searchedActivity?._id,
@@ -86,7 +81,7 @@ router.get("/saved/:userId", async (req: Request, res: Response) => {
     .exec();
   if (!saved)
     return res.json({ success: false, message: "No activities found" });
-  console.log(saved);
+
   const activities = saved.map((el) => el.activity);
   return res.json({ success: true, saved: activities });
 });

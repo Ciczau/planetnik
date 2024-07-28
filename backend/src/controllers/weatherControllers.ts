@@ -243,13 +243,11 @@ router.post("/search", async (req: Request, res: Response) => {
   }
 });
 
-// Nowy endpoint do alertów pogodowych
 router.get("/alerts/:lat/:lng", async (req: Request, res: Response) => {
   const { lat, lng } = req.params;
-  const { radius } = req.query; // Dodanie obsługi promienia
+  const { radius } = req.query;
 
   try {
-    // Pobranie alertów pogodowych z OpenWeatherMap API
     const weatherResponse = await axios.get(
       "https://api.openweathermap.org/data/3.0/onecall",
       {
@@ -262,17 +260,15 @@ router.get("/alerts/:lat/:lng", async (req: Request, res: Response) => {
         },
       }
     );
-    console.log(weatherResponse.data);
     const alerts = weatherResponse.data.alerts || [];
 
-    // Pobranie pobliskich miast w zadanym promieniu
     const nearbyCitiesResponse = await axios.get(
       "https://api.opencagedata.com/geocode/v1/json",
       {
         params: {
           q: `${lat}+${lng}`,
           key: "b88b17e9647e488ea8588d635a7d617f",
-          radius: radius || 10000, // Domyślnie promień 10 km
+          radius: radius || 10000,
         },
       }
     );
@@ -283,13 +279,12 @@ router.get("/alerts/:lat/:lng", async (req: Request, res: Response) => {
       city: result.formatted,
     }));
 
-    // Filtracja alertów pogodowych w obrębie promienia
     const filteredAlerts = alerts.filter((alert) => {
       return nearbyCities.some((city) => {
         const distance = Math.sqrt(
           Math.pow(city.lat - lat, 2) + Math.pow(city.lon - lng, 2)
         );
-        return distance <= radius / 111.32; // Przeliczenie promienia na stopnie
+        return distance <= radius / 111.32;
       });
     });
 

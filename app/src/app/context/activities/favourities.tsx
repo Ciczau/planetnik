@@ -30,7 +30,6 @@ export const FavouritesProvider = ({ children }: Props) => {
   useEffect(() => {
     const getFavourites = async (userId: string) => {
       const res = await getFavouritesByUserIdRequest(userId);
-      console.log(res);
       if (res.success) {
         setFavourites(res.activityTypes);
       }

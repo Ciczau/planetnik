@@ -30,7 +30,6 @@ export const getActivitiesForCoordinates = async (
         radius,
       },
     });
-    console.log(response);
     return response.data;
   } catch (error) {
     console.error(error);

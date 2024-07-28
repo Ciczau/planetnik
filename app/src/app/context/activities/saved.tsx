@@ -31,7 +31,6 @@ export const SavedActivitiesProvider = ({ children }: Props) => {
     const getSaved = async (userId: string) => {
       const res = await getSavedActivitiesByUserIdRequest(userId);
       if (res.success) {
-        console.log(res.saved);
         setSaved(res.saved);
       }
     };
