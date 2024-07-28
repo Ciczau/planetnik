@@ -60,8 +60,8 @@ const SearchPage = ({ activitiesByCity }: Props) => {
     setLoaded(true);
 
     const existingValues =
-      router.query[section] && typeof router.query[section] === "string"
-        ? router.query[section].split(",")
+      typeof router.query[section] === "string"
+        ? (router.query[section] as string)?.split(",") || []
         : [];
 
     const newValues = handleChecked(filter, section)
@@ -127,13 +127,14 @@ const SearchPage = ({ activitiesByCity }: Props) => {
   useEffect(() => {
     if (router.query) {
       const fetchedFilters = Object.keys(router.query).map((key) => {
-        if (router.query[key]) {
+        const value = router.query[key];
+        if (value) {
           return {
             name: key,
             values:
-              typeof router.query[key] === "string"
-                ? router.query[key].split(",")
-                : router.query[key],
+              typeof value === "string"
+                ? value.split(",")
+                : (value as string[]),
           };
         }
         return { name: key, values: [] };
