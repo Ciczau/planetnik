@@ -7,10 +7,7 @@ import Button from "@/app/components/Button/Button";
 import Modal from "@/app/components/Modal/Modal";
 import { motion } from "framer-motion";
 import { IActivityType } from "@/app/types/activity";
-import {
-  addActivityTypeRequest,
-  getActivityTypesRequest,
-} from "@/app/api/activityRequests";
+import { addActivityTypeRequest } from "@/app/api/activityRequests";
 import { useUserContext } from "@/app/context/user";
 import { translateDirection } from "@/app/utils/translate";
 
@@ -196,7 +193,12 @@ const schema = yup.object().shape({
     .max(255, "Nazwa aktywności nie może być dłuższa niż 255 znaków")
     .required("Nazwa aktywności jest wymagana"),
 });
-const PreferencesSection = () => {
+
+type Props = {
+  fetchedActivityTypes: IActivityType[];
+};
+
+const PreferencesSection = ({ fetchedActivityTypes }: Props) => {
   const {
     register,
     handleSubmit,
@@ -205,21 +207,12 @@ const PreferencesSection = () => {
   } = useForm({
     resolver: yupResolver(schema),
   });
-  const [activityTypes, setActivityTypes] = useState<IActivityType[]>([]);
+  const [activityTypes, setActivityTypes] = useState<IActivityType[]>(
+    fetchedActivityTypes || []
+  );
   const [showForm, setShowForm] = useState(false);
 
   const user = useUserContext();
-
-  //TODO: SSR
-  useEffect(() => {
-    const getActivityTypes = async () => {
-      const res = await getActivityTypesRequest();
-      if (res.success) {
-        setActivityTypes(res.activityTypes);
-      }
-    };
-    getActivityTypes();
-  }, []);
 
   const onSubmit = async (data: any) => {
     if (!user) return;
