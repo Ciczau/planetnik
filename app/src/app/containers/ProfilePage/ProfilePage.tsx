@@ -9,8 +9,13 @@ import { TUser } from "@/app/types/user";
 import { useSavedActivitiesContext } from "@/app/context/activities/saved";
 import Activity from "@/app/components/Activity/Activity";
 import { useFavouritesContext } from "@/app/context/activities/favourities";
+import { IActivityType } from "@/app/types/activity";
 
-const ProfilePage = () => {
+type Props = {
+  fetchedActivityTypes: IActivityType[];
+};
+
+const ProfilePage = ({ fetchedActivityTypes }: Props) => {
   const [activeSection, setActiveSection] = useState<
     "ulubione" | "preferencje" | "zapisane" | "powiadomienia" | "dane-osobowe"
   >("ulubione");
@@ -95,7 +100,9 @@ const ProfilePage = () => {
           </S.FormWrapper>
         )}
 
-        {activeSection === "preferencje" && <PreferencesSection />}
+        {activeSection === "preferencje" && (
+          <PreferencesSection fetchedActivityTypes={fetchedActivityTypes} />
+        )}
         {activeSection === "zapisane" && (
           <div
             style={{
