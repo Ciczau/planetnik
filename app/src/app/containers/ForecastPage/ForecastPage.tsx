@@ -47,6 +47,22 @@ const ForecastPage = () => {
       );
     }
   }
+
+  useEffect(() => {
+    const getDataForCharts = () => {
+      const dayData = weather.map((day) => ({
+        name: new Date(day.dt * 1000).toLocaleDateString().slice(0, -5),
+        uv: day.temp.day,
+      }));
+      const nightData = weather.map((day) => ({
+        name: new Date(day.dt * 1000).toLocaleDateString().slice(0, -5),
+        uv: day.temp.night,
+      }));
+      setDayData(dayData);
+      setNightData(nightData);
+    };
+    getDataForCharts();
+  }, [weather]);
   return (
     <S.Wrapper>
       <Navigation />
